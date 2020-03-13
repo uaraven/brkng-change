@@ -87,7 +87,6 @@
         <configuration>
           <source>13</source>
           <target>13</target>
-          <compilerArgs>--enable-preview</compilerArgs>
         </configuration>
       </plugin>
       <plugin>
@@ -101,7 +100,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>net.ninjacat.apidiff.App</mainClass>
+              <mainClass>net.ninjacat.brking.App</mainClass>
             </manifest>
           </archive>
         </configuration>
