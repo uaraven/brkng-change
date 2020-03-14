@@ -2,6 +2,7 @@ package net.ninjacat.brking.api.internal;
 
 import net.ninjacat.brking.api.*;
 import net.ninjacat.brking.utils.AccessLevel;
+import net.ninjacat.brking.utils.AsmUtils;
 import org.objectweb.asm.*;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.ninjacat.brking.utils.AsmUtils.className;
 import static org.objectweb.asm.ClassReader.*;
@@ -68,7 +70,7 @@ public final class ApiClassParser extends ClassVisitor {
         apiClassBuilder.name(className(name));
         apiClassBuilder.signature(signature);
         apiClassBuilder.superName(className(superName));
-        apiClassBuilder.interfaces(List.of(interfaces));
+        apiClassBuilder.interfaces(List.of(interfaces).stream().map(AsmUtils::className).collect(Collectors.toList()));
     }
 
     @Override

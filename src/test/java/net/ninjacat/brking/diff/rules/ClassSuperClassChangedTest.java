@@ -8,24 +8,29 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 
 
-public class ClassVisibilityChangedTest {
+public class ClassSuperClassChangedTest {
 
     @Test
     public void shouldFindVisibilityDifference() {
         final var older = ApiClassParser.of(Older.class.getName());
         final var newer = ApiClassParser.of(Newer.class.getName());
 
-        final var differ = new ClassVisibilityChanged();
+        final var differ = new ClassSuperclassChanged();
 
         final var diff = differ.process(older, newer);
 
         assertThat(diff, hasSize(1));
-        assertThat(diff.get(0).description(), containsString("Visibility"));
+        assertThat(diff.get(0).description(), containsString("Super class changed"));
+        assertThat(diff.get(0).description(), containsString(Parent.class.getName()));
     }
 
     public static class Older {
     }
 
-    private static class Newer {
+    public static class Parent {
+
+    }
+
+    private static class Newer extends Parent {
     }
 }
