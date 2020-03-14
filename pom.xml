@@ -9,7 +9,7 @@
   <version>0.0.1</version>
 
   <properties>
-    <jcommander.version>1.71</jcommander.version>
+    <jcommander.version>1.78</jcommander.version>
     <immutables.version>2.8.2</immutables.version>
     <vavr.version>1.0.0-alpha-3</vavr.version>
     <hamcrest.version>2.2</hamcrest.version>

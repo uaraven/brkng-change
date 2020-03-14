@@ -3,17 +3,17 @@ package net.ninjacat.brking.diff.rules;
 import java.util.Collection;
 import java.util.List;
 
-import net.ninjacat.brking.api.ApiObject;
-
 public class RuleProvider {
-  Collection<DiffRule<? extends ApiObject>> CLASS_RULES = List.of(
-      // Breaking
-      new ClassAccess(),
-      new ClassRemovingInterfaces(),
-      new ClassChangingSuperclass(),
-      // Warning
-      new ClassVersion(),
-      // Safe
-      new ClassImplementingNewInterfaces()
+  Collection<ClassDiffRule> CLASS_RULES = List.of(
+          // Breaking
+          new ClassVisibilityChanged(),
+          new ClassModifiersChanged(),
+          new ClassInterfacesRemoved(),
+          new ClassSuperclassChanged(),
+          new ClassFieldsRule(),
+          // Warning
+          new ClassVersion(),
+          // Safe
+          new ClassImplementingNewInterfaces()
   );
 }

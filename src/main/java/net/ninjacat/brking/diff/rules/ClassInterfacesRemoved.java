@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ClassImplementingNewInterfaces implements ClassDiffRule {
+public class ClassInterfacesRemoved implements ClassDiffRule {
   @Override
   public List<DiffElement> process(final ApiClass older, final ApiClass newer) {
     final var olderInterfaces = Set.copyOf(older.interfaces());
     final var newerInterfaces = Set.copyOf(newer.interfaces());
 
-    final var removed = newerInterfaces.stream()
-            .filter(it -> !olderInterfaces.contains(it))
+    final var removed = olderInterfaces.stream()
+            .filter(it -> !newerInterfaces.contains(it))
             .collect(Collectors.toUnmodifiableList());
 
     return removed.stream()
@@ -24,8 +24,8 @@ public class ClassImplementingNewInterfaces implements ClassDiffRule {
                     .builder()
                     .apiObject(older)
                     .description(
-                            String.format("Interface '%s' has been added", intf))
-                    .severity(ChangeSeverity.SAFE)
+                            String.format("Interface '%s' has been removed", intf))
+                    .severity(ChangeSeverity.BREAKING)
                     .build())
             .collect(Collectors.toUnmodifiableList());
   }

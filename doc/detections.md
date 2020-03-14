@@ -62,15 +62,17 @@ as the old method no longer exist.
   - [x] Changing superclass of a class
   - [x] Removing implemented interfaces
   - [x] Changing class visibility to a stricter one
-  - [ ] Changing access flags static -> non static and vice versa 
+  - [x] Changing class modifiers static, final, abstract 
 - Fields. Fields are identified solely by their name. Two fields with the same name are considerd the same. 
-  - [ ] Removing a field (including changing visibility to more restricted)
-  - [ ] Changing field type
-  - [ ] Changing field visibility to a stricter one
+  - [x] Removing a field (including changing visibility to more restricted)
+  - [x] Changing field type
+  - [x] Changing field visibility to a stricter one
+  - [x] Changing field modifier
 - Methods. Methods are identified by complete signature.
   - [ ] Removing a method - name with the same name and number and type of parameters does not exist. 
   - [ ] Changing method return type 
   - [ ] Changing method visibility to a stricter one
+  - [ ] Changing method modifier  
 
 ### Warning
 

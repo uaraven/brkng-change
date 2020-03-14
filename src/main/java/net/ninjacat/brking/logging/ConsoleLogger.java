@@ -14,7 +14,7 @@ public final class ConsoleLogger implements Logger {
 
   @Override
   public void print(final String format, final Object... params) {
-    System.out.println(format.formatted(params));
+    System.out.println(String.format(format, params));
   }
 
   @Override
@@ -30,8 +30,8 @@ public final class ConsoleLogger implements Logger {
 
   @Override
   public void err(final Throwable cause, final String format, final Object... params) {
-    System.err.println(format.formatted(params));
-    cause.printStackTrace();
+      System.err.println(String.format(format, params));
+      cause.printStackTrace();
   }
 
   @Override
@@ -41,7 +41,7 @@ public final class ConsoleLogger implements Logger {
 
   @Override
   public void err(final String format, final Object... params) {
-    System.err.println(format.formatted(params));
+      System.err.println(String.format(format, params));
   }
 
   @Override

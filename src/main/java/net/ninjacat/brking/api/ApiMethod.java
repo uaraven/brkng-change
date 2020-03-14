@@ -1,13 +1,13 @@
 package net.ninjacat.brking.api;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import net.ninjacat.brking.utils.AsmUtils;
 import org.immutables.value.Value;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.Method;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Value.Immutable
 public interface ApiMethod extends ApiObject {
@@ -23,10 +23,10 @@ public interface ApiMethod extends ApiObject {
                              .map(Type::getClassName)
                              .collect(Collectors.joining(","));
 
-    return "%s %s %s(%s)".formatted(AsmUtils.modifiers(access()),
-                                    m.getReturnType().getClassName(),
-                                    name(),
-                                    params);
+    return "%s %s %s(%s)".formatted(AsmUtils.modifiersToString(access()),
+            m.getReturnType().getClassName(),
+            name(),
+            params);
   }
 
   @Override

@@ -8,7 +8,7 @@ public interface ApiField extends ApiObject {
 
   @Override
   default String apiName() {
-    return "%s %s %s".formatted(AsmUtils.modifiers(access()), AsmUtils.className(descriptor()), name());
+    return String.format("%s %s %s", AsmUtils.modifiersToString(access()), descriptor(), name());
   }
 
   @Override

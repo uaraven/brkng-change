@@ -1,52 +1,75 @@
 package net.ninjacat.brking.utils;
 
-import java.util.Optional;
-
+import com.google.common.collect.ImmutableMap;
+import net.ninjacat.brking.api.ApiObject;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public final class AsmUtils {
-  private AsmUtils() {}
+    private static final Map<Integer, String> ACCESS_MODS = Map.of(
+            Opcodes.ACC_PUBLIC, "public",
+            Opcodes.ACC_PRIVATE, "private",
+            Opcodes.ACC_PROTECTED, "protected"
+    );
 
-  public static String className(final String descriptor) {
-    return Type.getObjectType(descriptor).getClassName();
-  }
+    private static final Map<Integer, String> MODIFIERS = Map.of(
+            Opcodes.ACC_STATIC, "static",
+            Opcodes.ACC_FINAL, "final",
+            Opcodes.ACC_NATIVE, "native",
+            Opcodes.ACC_SYNCHRONIZED, "synchronized",
+            Opcodes.ACC_VOLATILE, "volatile");
 
-  public static String modifiers(final int access) {
-    final var sb = new StringBuilder();
-    if ((access & Opcodes.ACC_PUBLIC) != 0) {
-      sb.append("public ");
-    }
-    if ((access & Opcodes.ACC_PRIVATE) != 0) {
-      sb.append("private ");
-    }
-    if ((access & Opcodes.ACC_PROTECTED) != 0) {
-      sb.append("protected ");
-    }
-    if ((access & Opcodes.ACC_ABSTRACT) != 0) {
-      sb.append("abstract ");
-    }
-    if ((access & Opcodes.ACC_STATIC) != 0) {
-      sb.append("static ");
-    }
-    if ((access & Opcodes.ACC_FINAL) != 0) {
-      sb.append("final ");
-    }
-    if ((access & Opcodes.ACC_NATIVE) != 0) {
-      sb.append("native ");
-    }
-    return sb.toString();
-  }
+    private static final Map<Integer, String> ACC_ALL = buildAccAll();
 
-  public static Optional<String> stricterAccessWarning(final int newer, final int older) {
-    final var newerAccess = AccessLevel.fromAccess(newer);
-    final var olderAccess = AccessLevel.fromAccess(older);
-    if (newerAccess.ordinal() < olderAccess.ordinal()) {
-      return Optional
-          .of(String.format("Access level has changed from '%s' to '%s'", olderAccess.text(), newerAccess.text()));
+    private static Map<Integer, String> buildAccAll() {
+        final var acc = new HashMap<Integer, String>();
+        acc.putAll(ACCESS_MODS);
+        acc.putAll(MODIFIERS);
+        return ImmutableMap.copyOf(acc);
     }
-    else {
-      return Optional.empty();
+
+    private AsmUtils() {
     }
-  }
+
+    public static String className(final String descriptor) {
+        return Type.getObjectType(descriptor).getClassName();
+    }
+
+    public static String modifiersToString(final int access) {
+        return ACC_ALL.entrySet().stream()
+                .filter(e -> (access & e.getKey()) != 0)
+                .map(Map.Entry::getValue)
+                .collect(Collectors.joining(" "));
+    }
+
+    public static String modifiersOnly(final int access) {
+        return MODIFIERS.entrySet().stream()
+                .filter(e -> (access & e.getKey()) != 0)
+                .map(Map.Entry::getValue)
+                .collect(Collectors.joining(" "));
+    }
+
+    public static String accessToString(final int access) {
+        return ACCESS_MODS.entrySet().stream()
+                .filter(e -> (e.getKey() & access) != 0)
+                .map(Map.Entry::getValue)
+                .findFirst().orElse("package private");
+    }
+
+    public static boolean hasAccessChangedToStricter(final int older, final int newer) {
+        return AccessLevel.fromAccess(older).ordinal() < AccessLevel.fromAccess(newer).ordinal();
+    }
+
+    public static boolean hasModifierChanged(final ApiObject older, final ApiObject newer) {
+        return hasModifierChanged(older, newer, Opcodes.ACC_FINAL)
+                || hasModifierChanged(older, newer, Opcodes.ACC_STATIC);
+    }
+
+    public static boolean hasModifierChanged(final ApiObject older, final ApiObject newer, final int modBit) {
+        return (older.access() & modBit) != (newer.access() & modBit);
+    }
 }
