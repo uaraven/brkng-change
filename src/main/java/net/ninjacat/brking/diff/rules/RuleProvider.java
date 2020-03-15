@@ -11,6 +11,7 @@ public class RuleProvider {
           new ClassInterfacesRemoved(),
           new ClassSuperclassChanged(),
           new ClassFieldsRule(),
+          new ClassMethodsRule(),
           // Warning
           new ClassVersion(),
           // Safe

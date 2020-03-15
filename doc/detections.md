@@ -69,10 +69,11 @@ as the old method no longer exist.
   - [x] Changing field visibility to a stricter one
   - [x] Changing field modifier
 - Methods. Methods are identified by complete signature.
-  - [ ] Removing a method - name with the same name and number and type of parameters does not exist. 
-  - [ ] Changing method return type 
-  - [ ] Changing method visibility to a stricter one
-  - [ ] Changing method modifier  
+  - [x] Removing a method - name with the same name and number and type of parameters does not exist. 
+  - [x] Changing method return type 
+  - [x] Changing method visibility to a stricter one
+  - [x] Changing method modifier  
+  - [x] Exception list changed
 
 ### Warning
 
@@ -81,8 +82,11 @@ as the old method no longer exist.
     - [ ] Annotations changed
 - Fields
     - [ ] Annotations changed
+    - [ ] Changing visibility to a more relaxed
 - Methods 
     - [ ] Annotations changed
+    - [ ] Changing visibility to a more relaxed
+
 
 ### Safe
 
@@ -90,3 +94,15 @@ as the old method no longer exist.
     - [x] Implementing new interfaces
     - [ ] Adding field
     - [ ] Adding method
+    
+    
+### Extra points
+
+- Field 
+    - [ ] Type changed to subclass of previous one
+- Method
+    - [ ] Return type changed to subclass of previous one
+    - [ ] Parameter type changed to superclass of previous one
+- Class 
+    - [ ] Super class changed to subclass of previous one
+   

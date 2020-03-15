@@ -1,5 +1,6 @@
 package net.ninjacat.brking.api;
 
+import io.vavr.Lazy;
 import net.ninjacat.brking.utils.AsmUtils;
 import org.immutables.value.Value;
 import org.objectweb.asm.Type;
@@ -10,27 +11,43 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Value.Immutable
-public interface ApiMethod extends ApiObject {
-  List<ApiMethodParameter> parameters();
+public abstract class ApiMethod implements ApiClassElement {
+    private final Lazy<Method> method = Lazy.of(() -> new Method(name(), descriptor()));
+    private final Lazy<String> identifier = Lazy.of(() -> {
+        final var params = Arrays.stream(method.get().getArgumentTypes())
+                .map(Type::getDescriptor)
+                .collect(Collectors.joining(""));
 
-  List<String> exceptions();
+        return String.format("%s(%s)", name(), params);
+    });
 
-  @Override
-  default String apiName() {
-    final var m = new Method(name(), descriptor());
+    public abstract List<ApiMethodParameter> parameters();
 
-    final var params = Arrays.stream(m.getArgumentTypes())
-                             .map(Type::getClassName)
-                             .collect(Collectors.joining(","));
+    public abstract List<String> exceptions();
 
-    return "%s %s %s(%s)".formatted(AsmUtils.modifiersToString(access()),
-            m.getReturnType().getClassName(),
-            name(),
-            params);
-  }
+    public String identifier() {
+        return identifier.get();
+    }
 
-  @Override
-  default String apiDescription(final ApiObject owner) {
-    return apiName() + " in " + owner.apiDescription(null);
-  }
+    @Override
+    public String returnType() {
+        return method.get().getReturnType().getClassName();
+    }
+
+    @Override
+    public String apiName() {
+        final var params = Arrays.stream(method.get().getArgumentTypes())
+                .map(Type::getClassName)
+                .collect(Collectors.joining(","));
+
+        return String.format("%s %s %s(%s)", AsmUtils.modifiersToString(access()),
+                method.get().getReturnType().getClassName(),
+                name(),
+                params);
+    }
+
+    @Override
+    public String apiDescription(final ApiObject owner) {
+        return apiName() + " in " + owner.apiDescription(null);
+    }
 }

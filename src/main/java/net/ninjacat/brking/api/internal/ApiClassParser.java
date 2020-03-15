@@ -111,7 +111,11 @@ public final class ApiClassParser extends ClassVisitor {
                     .name(name)
                     .descriptor(descriptor)
                     .signature(signature)
-                    .exceptions(Optional.ofNullable(exceptions).map(List::of).orElse(List.of()))
+                    .exceptions(Optional.ofNullable(exceptions)
+                            .map(List::of)
+                            .orElse(List.of()).stream()
+                            .map(AsmUtils::className)
+                            .collect(Collectors.toUnmodifiableList()))
                     .build());
         }
         return super.visitMethod(access, name, descriptor, signature, exceptions);

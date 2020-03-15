@@ -21,7 +21,10 @@ public final class AsmUtils {
             Opcodes.ACC_FINAL, "final",
             Opcodes.ACC_NATIVE, "native",
             Opcodes.ACC_SYNCHRONIZED, "synchronized",
-            Opcodes.ACC_VOLATILE, "volatile");
+            Opcodes.ACC_VOLATILE, "volatile",
+            Opcodes.ACC_STRICT, "strictfp",
+            Opcodes.ACC_ABSTRACT, "abstract"
+    );
 
     private static final Map<Integer, String> ACC_ALL = buildAccAll();
 
@@ -65,8 +68,8 @@ public final class AsmUtils {
     }
 
     public static boolean hasModifierChanged(final ApiObject older, final ApiObject newer) {
-        return hasModifierChanged(older, newer, Opcodes.ACC_FINAL)
-                || hasModifierChanged(older, newer, Opcodes.ACC_STATIC);
+        return MODIFIERS.entrySet().stream()
+                .anyMatch(mod -> hasModifierChanged(older, newer, mod.getKey()));
     }
 
     public static boolean hasModifierChanged(final ApiObject older, final ApiObject newer, final int modBit) {
@@ -75,5 +78,9 @@ public final class AsmUtils {
 
     public static String descriptorToClass(final String descriptor) {
         return Type.getType(descriptor).getClassName();
+    }
+
+    public static Map<Integer, String> getModifiers() {
+        return MODIFIERS;
     }
 }
