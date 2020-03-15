@@ -22,22 +22,31 @@ public final class ApiClassParser extends ClassVisitor {
     private final List<ApiMethod> methods = new ArrayList<>();
 
     private final ImmutableApiClass.Builder apiClassBuilder = ImmutableApiClass.builder();
+    private final boolean publicOnly;
 
-    private ApiClassParser() {
+    private ApiClassParser(final boolean publicOnly) {
         super(Opcodes.ASM7);
+        this.publicOnly = publicOnly;
     }
 
-    public static ApiClass of(final InputStream stream) {
-        final var classParser = new ApiClassParser();
+    public static ApiClass of(final InputStream stream, final boolean publicOnly) {
+        final var classParser = new ApiClassParser(publicOnly);
         classParser.readClass(stream);
         return classParser.getApiClass();
     }
 
-    public static ApiClass of(final String className) {
-        final var jarClassReader = new ApiClassParser();
+    public static ApiClass ofPublic(final String className) {
+        final var jarClassReader = new ApiClassParser(true);
         jarClassReader.readClass(className);
         return jarClassReader.getApiClass();
     }
+
+    public static ApiClass of(final String className) {
+        final var jarClassReader = new ApiClassParser(false);
+        jarClassReader.readClass(className);
+        return jarClassReader.getApiClass();
+    }
+
 
     public void readClass(final String className) {
         try {
@@ -79,7 +88,7 @@ public final class ApiClassParser extends ClassVisitor {
                                    final String descriptor,
                                    final String signature,
                                    final Object value) {
-        if (AccessLevel.fromAccess(access) == AccessLevel.PUBLIC) {
+        if (!publicOnly || AccessLevel.fromAccess(access) == AccessLevel.PUBLIC) {
             fields.add(ImmutableApiField.builder()
                     .access(access)
                     .name(name)
@@ -96,7 +105,7 @@ public final class ApiClassParser extends ClassVisitor {
                                      final String descriptor,
                                      final String signature,
                                      final String[] exceptions) {
-        if (AccessLevel.fromAccess(access) == AccessLevel.PUBLIC) {
+        if (!publicOnly || AccessLevel.fromAccess(access) == AccessLevel.PUBLIC) {
             methods.add(ImmutableApiMethod.builder()
                     .access(access)
                     .name(name)

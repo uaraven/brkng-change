@@ -25,7 +25,7 @@ public final class ClassPool extends ApiObjectPool<ApiClass> {
                         .filter(entry -> !entry.isDirectory())
                         .filter(entry -> entry.getRealName().endsWith(".class"))
                         .map(entry -> entryToStream(file, entry))
-                        .map(ApiClassParser::of)
+                        .map(stream -> ApiClassParser.of(stream, publicOnly))
                         .filter(cls -> !publicOnly || cls.isPublic())
                         .collect(Collectors.toList()));
     }

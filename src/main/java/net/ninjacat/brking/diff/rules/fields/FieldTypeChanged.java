@@ -22,14 +22,14 @@ public class FieldTypeChanged implements FieldDiffRule {
 
         return olderFields.keySet().stream()
                 .filter(newerFields::containsKey)
-                .filter(name -> !olderFields.get(name).signature().equals(newerFields.get(name).signature()))
+                .filter(name -> !olderFields.get(name).descriptor().equals(newerFields.get(name).descriptor()))
                 .map(field -> ImmutableDiffElement
                         .builder()
                         .apiObject(reference)
                         .description(
                                 String.format("Field '%s' type has changed to '%s'",
                                         olderFields.get(field).apiName(),
-                                        AsmUtils.className(newerFields.get(field).descriptor())))
+                                        AsmUtils.descriptorToClass(newerFields.get(field).descriptor())))
                         .severity(ChangeSeverity.BREAKING)
                         .build())
                 .collect(Collectors.toUnmodifiableList());

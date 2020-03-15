@@ -53,7 +53,7 @@ public final class AsmUtils {
                 .collect(Collectors.joining(" "));
     }
 
-    public static String accessToString(final int access) {
+    public static String visibilityToString(final int access) {
         return ACCESS_MODS.entrySet().stream()
                 .filter(e -> (e.getKey() & access) != 0)
                 .map(Map.Entry::getValue)
@@ -61,7 +61,7 @@ public final class AsmUtils {
     }
 
     public static boolean hasAccessChangedToStricter(final int older, final int newer) {
-        return AccessLevel.fromAccess(older).ordinal() < AccessLevel.fromAccess(newer).ordinal();
+        return AccessLevel.fromAccess(older).ordinal() > AccessLevel.fromAccess(newer).ordinal();
     }
 
     public static boolean hasModifierChanged(final ApiObject older, final ApiObject newer) {
@@ -71,5 +71,9 @@ public final class AsmUtils {
 
     public static boolean hasModifierChanged(final ApiObject older, final ApiObject newer, final int modBit) {
         return (older.access() & modBit) != (newer.access() & modBit);
+    }
+
+    public static String descriptorToClass(final String descriptor) {
+        return Type.getType(descriptor).getClassName();
     }
 }

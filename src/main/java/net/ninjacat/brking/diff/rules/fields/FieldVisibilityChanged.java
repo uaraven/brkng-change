@@ -12,7 +12,7 @@ import net.ninjacat.brking.utils.AsmUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FieldAccessChanged implements FieldDiffRule {
+public class FieldVisibilityChanged implements FieldDiffRule {
 
     @Override
     public List<DiffElement> process(final ApiObject reference,
@@ -21,13 +21,13 @@ public class FieldAccessChanged implements FieldDiffRule {
         final var matching = matchingOnly(older, newer);
         return matching.stream()
                 .map(field -> Tuple.of(older.get(field.name()), newer.get(field.name())))
-                .filter(pair -> AsmUtils.hasModifierChanged(pair._1(), pair._2()))
+                .filter(pair -> AsmUtils.hasAccessChangedToStricter(pair._1().access(), pair._2().access()))
                 .map(pair -> ImmutableDiffElement.builder()
                         .apiObject(reference)
                         .severity(ChangeSeverity.BREAKING)
-                        .description(String.format("Field '%s' modifiers changed to '%s'",
-                                pair._1().apiDescription(reference),
-                                AsmUtils.accessToString(pair._2().access())))
+                        .description(String.format("Field '%s' visibility changed to '%s'",
+                                pair._1().apiName(),
+                                AsmUtils.visibilityToString(pair._2().access())))
                         .build())
                 .collect(Collectors.toUnmodifiableList());
 

@@ -8,18 +8,18 @@ import net.ninjacat.brking.utils.AsmUtils;
 
 import java.util.List;
 
-import static net.ninjacat.brking.utils.AsmUtils.accessToString;
+import static net.ninjacat.brking.utils.AsmUtils.visibilityToString;
 
 public class ClassVisibilityChanged implements ClassDiffRule {
     @Override
     public List<DiffElement> process(final ApiClass older, final ApiClass newer) {
-        final var stricterAccess = AsmUtils.hasAccessChangedToStricter(newer.access(), older.access());
+        final var stricterAccess = AsmUtils.hasAccessChangedToStricter(older.access(), newer.access());
         return stricterAccess
                 ? List.of(ImmutableDiffElement.builder()
                 .apiObject(older)
                 .severity(ChangeSeverity.BREAKING)
                 .description(String.format("Visibility changed from '%s' to '%s'",
-                        accessToString(older.access()), accessToString(newer.access())))
+                        visibilityToString(older.access()), visibilityToString(newer.access())))
                 .build())
                 : List.of();
     }

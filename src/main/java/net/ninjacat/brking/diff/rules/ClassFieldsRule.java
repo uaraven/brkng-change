@@ -11,8 +11,8 @@ import java.util.List;
 public class ClassFieldsRule implements ClassDiffRule {
 
     private static final List<FieldDiffRule> fieldRules = List.of(
-            new FieldAccessChanged(),
             new FieldModifiersChanged(),
+            new FieldVisibilityChanged(),
             new FieldRemoved(),
             new FieldTypeChanged()
     );

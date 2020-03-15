@@ -21,13 +21,13 @@ public class FieldModifiersChanged implements FieldDiffRule {
         final var matching = matchingOnly(older, newer);
         return matching.stream()
                 .map(field -> Tuple.of(older.get(field.name()), newer.get(field.name())))
-                .filter(pair -> AsmUtils.hasAccessChangedToStricter(pair._1().access(), pair._2().access()))
+                .filter(pair -> AsmUtils.hasModifierChanged(pair._1(), pair._2()))
                 .map(pair -> ImmutableDiffElement.builder()
                         .apiObject(reference)
                         .severity(ChangeSeverity.BREAKING)
-                        .description(String.format("Field '%s' access level changed to '%s'",
-                                pair._1().apiDescription(reference),
-                                AsmUtils.modifiersToString(pair._2().access())))
+                        .description(String.format("Field '%s' modifiers changed to '%s'",
+                                pair._1().apiName(),
+                                AsmUtils.visibilityToString(pair._2().access())))
                         .build())
                 .collect(Collectors.toUnmodifiableList());
 
