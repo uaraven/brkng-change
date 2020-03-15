@@ -25,7 +25,7 @@ public class FieldTypeChanged implements FieldDiffRule {
                 .filter(name -> !olderFields.get(name).descriptor().equals(newerFields.get(name).descriptor()))
                 .map(field -> ImmutableDiffElement
                         .builder()
-                        .apiObject(reference)
+                        .ownerClass(reference)
                         .description(
                                 String.format("Field '%s' type has changed to '%s'",
                                         olderFields.get(field).apiName(),

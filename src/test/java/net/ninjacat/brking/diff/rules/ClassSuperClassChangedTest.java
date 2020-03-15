@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.hasSize;
 public class ClassSuperClassChangedTest {
 
     @Test
-    public void shouldFindVisibilityDifference() {
+    public void shouldFindChangedSuperclass() {
         final var older = ApiClassParser.of(Older.class.getName());
         final var newer = ApiClassParser.of(Newer.class.getName());
 

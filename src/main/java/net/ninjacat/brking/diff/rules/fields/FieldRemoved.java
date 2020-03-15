@@ -26,7 +26,7 @@ public class FieldRemoved implements FieldDiffRule {
         return removed.stream()
                 .map(field -> ImmutableDiffElement
                         .builder()
-                        .apiObject(reference)
+                        .ownerClass(reference)
                         .description(
                                 String.format("Field '%s' has been removed", olderFields.get(field).apiName()))
                         .severity(ChangeSeverity.BREAKING)

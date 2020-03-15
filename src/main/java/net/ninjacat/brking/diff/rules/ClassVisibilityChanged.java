@@ -16,10 +16,12 @@ public class ClassVisibilityChanged implements ClassDiffRule {
         final var stricterAccess = AsmUtils.hasAccessChangedToStricter(older.access(), newer.access());
         return stricterAccess
                 ? List.of(ImmutableDiffElement.builder()
-                .apiObject(older)
+                .ownerClass(older)
                 .severity(ChangeSeverity.BREAKING)
-                .description(String.format("Visibility changed from '%s' to '%s'",
-                        visibilityToString(older.access()), visibilityToString(newer.access())))
+                .changedObject(older)
+                .changedFrom(visibilityToString(older.access()))
+                .changedTo(visibilityToString(newer.access()))
+                .description("Visibility changed from '${changed.from}' to '${changed.to}'")
                 .build())
                 : List.of();
     }

@@ -22,9 +22,10 @@ public class ClassInterfacesRemoved implements ClassDiffRule {
     return removed.stream()
             .map(intf -> ImmutableDiffElement
                     .builder()
-                    .apiObject(older)
-                    .description(
-                            String.format("Interface '%s' has been removed", intf))
+                    .ownerClass(older)
+                    .changedObject(older)
+                    .changedTo(intf)
+                    .description("Interface '${changed.to}' has been removed")
                     .severity(ChangeSeverity.BREAKING)
                     .build())
             .collect(Collectors.toUnmodifiableList());

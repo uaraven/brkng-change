@@ -23,7 +23,7 @@ public class MethodModifiersChanged implements MethodDiffRule {
                 .map(method -> Tuple.of(older.get(method.identifier()), newer.get(method.identifier())))
                 .filter(pair -> AsmUtils.hasModifierChanged(pair._1(), pair._2()))
                 .map(pair -> ImmutableDiffElement.builder()
-                        .apiObject(reference)
+                        .ownerClass(reference)
                         .severity(ChangeSeverity.BREAKING)
                         .description(String.format("Method '%s' modifiers changed to '%s'",
                                 pair._1().apiName(),

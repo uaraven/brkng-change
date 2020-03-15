@@ -22,11 +22,12 @@ public class MethodReturnTypeChanged implements MethodDiffRule {
                 .map(method -> Tuple.of(older.get(method.identifier()), newer.get(method.identifier())))
                 .filter(pair -> !pair._1().returnType().equals(pair._2().returnType()))
                 .map(pair -> ImmutableDiffElement.builder()
-                        .apiObject(reference)
+                        .ownerClass(reference)
                         .severity(ChangeSeverity.BREAKING)
-                        .description(String.format("Method '%s' return type changed to '%s'",
-                                pair._1().apiName(),
-                                pair._2().returnType()))
+                        .changedObject(pair._1())
+                        .changedFrom(pair._1().returnType())
+                        .changedTo(pair._2().returnType())
+                        .description("Method '${object.name}' return type changed from '${changed.from} to '${changed.to}'")
                         .build())
                 .collect(Collectors.toUnmodifiableList());
 

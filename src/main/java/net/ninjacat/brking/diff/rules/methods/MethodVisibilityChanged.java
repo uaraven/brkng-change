@@ -23,7 +23,7 @@ public class MethodVisibilityChanged implements MethodDiffRule {
                 .map(method -> Tuple.of(older.get(method.identifier()), newer.get(method.identifier())))
                 .filter(pair -> AsmUtils.hasAccessChangedToStricter(pair._1().access(), pair._2().access()))
                 .map(pair -> ImmutableDiffElement.builder()
-                        .apiObject(reference)
+                        .ownerClass(reference)
                         .severity(ChangeSeverity.BREAKING)
                         .description(String.format("Method '%s' visibility changed to '%s'",
                                 pair._1().apiName(),

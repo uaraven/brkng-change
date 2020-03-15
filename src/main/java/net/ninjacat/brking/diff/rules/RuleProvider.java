@@ -15,6 +15,6 @@ public class RuleProvider {
           // Warning
           new ClassVersion(),
           // Safe
-          new ClassImplementingNewInterfaces()
+          new ClassInterfacesAdded()
   );
 }

@@ -23,7 +23,7 @@ public class FieldVisibilityChanged implements FieldDiffRule {
                 .map(field -> Tuple.of(older.get(field.name()), newer.get(field.name())))
                 .filter(pair -> AsmUtils.hasAccessChangedToStricter(pair._1().access(), pair._2().access()))
                 .map(pair -> ImmutableDiffElement.builder()
-                        .apiObject(reference)
+                        .ownerClass(reference)
                         .severity(ChangeSeverity.BREAKING)
                         .description(String.format("Field '%s' visibility changed to '%s'",
                                 pair._1().apiName(),

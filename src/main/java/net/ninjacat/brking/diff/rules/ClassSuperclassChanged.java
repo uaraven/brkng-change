@@ -13,7 +13,10 @@ public class ClassSuperclassChanged implements ClassDiffRule {
         if (!older.superName().equals(newer.superName())) {
             return List.of(
                     ImmutableDiffElement.builder()
-                            .apiObject(older)
+                            .ownerClass(older)
+                            .changedObject(older)
+                            .changedFrom(older.superName())
+                            .changedTo(newer.superName())
                             .severity(ChangeSeverity.BREAKING)
                             .description(String.format("Super class changed from '%s' to '%s'", older.superName(),
                                     newer.superName()))

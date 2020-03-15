@@ -82,10 +82,13 @@ as the old method no longer exist.
     - [ ] Annotations changed
 - Fields
     - [ ] Annotations changed
-    - [ ] Changing visibility to a more relaxed
+    - ~~Changing visibility to a more relaxed~~ 
 - Methods 
     - [ ] Annotations changed
-    - [ ] Changing visibility to a more relaxed
+    - ~~Changing visibility to a more relaxed~~ 
+    
+Note: only public fields in the older class are checked, so there is no possibility
+to detect changes from `private` to `public`, etc.
 
 
 ### Safe

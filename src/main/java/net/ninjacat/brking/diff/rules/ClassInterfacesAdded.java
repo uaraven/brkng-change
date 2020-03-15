@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ClassImplementingNewInterfaces implements ClassDiffRule {
+public class ClassInterfacesAdded implements ClassDiffRule {
   @Override
   public List<DiffElement> process(final ApiClass older, final ApiClass newer) {
     final var olderInterfaces = Set.copyOf(older.interfaces());
@@ -22,9 +22,10 @@ public class ClassImplementingNewInterfaces implements ClassDiffRule {
     return removed.stream()
             .map(intf -> ImmutableDiffElement
                     .builder()
-                    .apiObject(older)
-                    .description(
-                            String.format("Interface '%s' has been added", intf))
+                    .ownerClass(older)
+                    .changedObject(older)
+                    .changedTo(intf)
+                    .description("Interface '${changed.to}' has been added")
                     .severity(ChangeSeverity.SAFE)
                     .build())
             .collect(Collectors.toUnmodifiableList());

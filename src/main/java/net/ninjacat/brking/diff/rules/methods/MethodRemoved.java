@@ -19,7 +19,7 @@ public class MethodRemoved implements MethodDiffRule {
         return older.all().entrySet().stream()
                 .filter(e -> !newer.all().containsKey(e.getKey()))
                 .map(e -> ImmutableDiffElement.builder()
-                        .apiObject(reference)
+                        .ownerClass(reference)
                         .severity(ChangeSeverity.BREAKING)
                         .description(String.format("Method '%s' was removed",
                                 e.getValue().apiName()))

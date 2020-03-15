@@ -22,7 +22,7 @@ public class MethodExceptionsChanged implements MethodDiffRule {
                 .map(method -> Tuple.of(older.get(method.identifier()), newer.get(method.identifier())))
                 .filter(pair -> !pair._1().exceptions().equals(pair._2().exceptions()))
                 .map(pair -> ImmutableDiffElement.builder()
-                        .apiObject(reference)
+                        .ownerClass(reference)
                         .severity(ChangeSeverity.BREAKING)
                         .description(String.format("Method '%s' exceptions changed to '%s'",
                                 pair._1().apiName(),

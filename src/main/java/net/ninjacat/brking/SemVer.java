@@ -1,23 +1,23 @@
 package net.ninjacat.brking;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import io.vavr.control.Try;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 public class SemVer implements Comparable<SemVer> {
-  private final List<Integer> versions;
+    private final List<Integer> versions;
 
-  private final String qualifier;
+    private final String qualifier;
 
-  private SemVer(final java.util.List<Integer> versions, final String qualifier) {
-    this.versions = io.vavr.collection.List.ofAll(versions);
-    this.qualifier = qualifier;
-  }
+    private SemVer(final java.util.List<Integer> versions, final String qualifier) {
+        this.versions = io.vavr.collection.List.ofAll(versions);
+        this.qualifier = qualifier;
+    }
 
   public static SemVer of(final String version) {
     final String ver;
@@ -31,10 +31,10 @@ public class SemVer implements Comparable<SemVer> {
       ver = version;
       qualifier = "";
     }
-    return Try.of(() -> new SemVer(Arrays.stream(ver.split("\\."))
-                                         .map(Integer::parseInt)
-                                         .collect(Collectors.toList()), qualifier))
-              .getOrElseThrow(thr -> new IllegalArgumentException("Invalid version string \"%s\"".formatted(version)));
+      return Try.of(() -> new SemVer(Arrays.stream(ver.split("\\."))
+              .map(Integer::parseInt)
+              .collect(Collectors.toList()), qualifier))
+              .getOrElseThrow(thr -> new IllegalArgumentException(String.format("Invalid version string \"%s\"", version)));
   }
 
   public java.util.List<Integer> getElements() {

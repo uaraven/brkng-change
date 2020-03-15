@@ -20,9 +20,11 @@ public class ClassModifiersChanged implements ClassDiffRule {
         checkModifierChange(older, newer, modifiers, Opcodes.ACC_FINAL, "final");
         if (!modifiers.isEmpty()) {
             return List.of(ImmutableDiffElement.builder()
-                    .apiObject(older)
+                    .ownerClass(older)
                     .severity(ChangeSeverity.BREAKING)
-                    .description("Class modifiers has changed: " + String.join(",", modifiers))
+                    .changedObject(older)
+                    .changedTo(String.join(",", modifiers))
+                    .description("Class modifiers has changed to ${changed.to}")
                     .build()).stream()
                     .collect(Collectors.toUnmodifiableList());
         } else {
