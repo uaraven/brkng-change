@@ -95,8 +95,8 @@ to detect changes from `private` to `public`, etc.
 
 - Class
     - [x] Implementing new interfaces
-    - [ ] Adding field
-    - [ ] Adding method
+    - [x] Adding field
+    - [x] Adding method
     
     
 ### Extra points

@@ -15,7 +15,8 @@ public class ClassMethodsRule implements ClassDiffRule {
             new MethodModifiersChanged(),
             new MethodReturnTypeChanged(),
             new MethodRemoved(),
-            new MethodExceptionsChanged()
+            new MethodExceptionsChanged(),
+            new MethodAdded()
     );
 
     @Override

@@ -14,7 +14,8 @@ public class ClassFieldsRule implements ClassDiffRule {
             new FieldModifiersChanged(),
             new FieldVisibilityChanged(),
             new FieldRemoved(),
-            new FieldTypeChanged()
+            new FieldTypeChanged(),
+            new FieldAdded()
     );
 
     @Override
