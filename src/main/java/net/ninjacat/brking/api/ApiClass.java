@@ -1,12 +1,9 @@
 package net.ninjacat.brking.api;
 
+import java.util.List;
+
 import org.immutables.value.Value;
 import org.objectweb.asm.Opcodes;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static net.ninjacat.brking.utils.AsmUtils.className;
 
@@ -29,10 +26,6 @@ public interface ApiClass extends ApiObject {
 
   default boolean isPublic() {
     return (access() & Opcodes.ACC_PUBLIC) != 0;
-  }
-
-  private Set<String> fieldNames() {
-    return fields().stream().map(ApiField::name).collect(Collectors.toCollection(HashSet::new));
   }
 
   @Override

@@ -1,5 +1,7 @@
 package net.ninjacat.brking.api.internal;
 
+import javax.annotation.concurrent.Immutable;
+
 import net.ninjacat.brking.api.ApiClass;
 import org.junit.Test;
 
@@ -15,10 +17,12 @@ public class ApiClassParserTest {
     assertThat(testCls.superName(), is("java.lang.Object"));
     assertThat(testCls.interfaces(), hasSize(0));
 
-    assertThat(testCls.fields(), hasSize(1));
-    assertThat(testCls.methods(), hasSize(2));
+    assertThat(testCls.fields(), hasSize(2));
+    assertThat(testCls.methods(), hasSize(3));
+    assertThat(testCls.annotations(), hasSize(1));
   }
 
+  @Immutable
   public static class TestClass {
     private long longField = 10;
 

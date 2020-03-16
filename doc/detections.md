@@ -79,12 +79,13 @@ as the old method no longer exist.
 
 - Class
     - [x] Changing class bytecode version
-    - [ ] Annotations changed
+    - [x] Annotations changed
 - Fields
-    - [ ] Annotations changed
+    - [x] Annotations changed
     - ~~Changing visibility to a more relaxed~~ 
 - Methods 
-    - [ ] Annotations changed
+    - [x] Annotations changed
+    - [ ] Parameter annotations changed
     - ~~Changing visibility to a more relaxed~~ 
     
 Note: only public fields in the older class are checked, so there is no possibility
@@ -97,7 +98,6 @@ to detect changes from `private` to `public`, etc.
     - [x] Implementing new interfaces
     - [x] Adding field
     - [x] Adding method
-    
     
 ### Extra points
 

@@ -8,25 +8,28 @@ public enum DiffType {
     ClassVersionIncremented(ChangeSeverity.BREAKING),
     ClassVersionDecremented(ChangeSeverity.WARNING),
     ClassSuperClassChanged(ChangeSeverity.BREAKING),
-    FieldModifiersChanged(ChangeSeverity.BREAKING),
-    FieldRemoved(ChangeSeverity.BREAKING),
-    FieldAdded(ChangeSeverity.SAFE),
-    FieldTypeChanged(ChangeSeverity.BREAKING),
-    FieldVisibilityChanged(ChangeSeverity.BREAKING),
-    MethodModifiersChanged(ChangeSeverity.BREAKING),
-    MethodRemoved(ChangeSeverity.BREAKING),
-    MethodAdded(ChangeSeverity.SAFE),
-    MethodReturnTypeChanged(ChangeSeverity.BREAKING),
-    MethodVisibilityChanged(ChangeSeverity.BREAKING),
-    MethodExceptionsChanged(ChangeSeverity.BREAKING);
+  FieldModifiersChanged(ChangeSeverity.BREAKING),
+  FieldRemoved(ChangeSeverity.BREAKING),
+  FieldAdded(ChangeSeverity.SAFE),
+  FieldTypeChanged(ChangeSeverity.BREAKING),
+  FieldVisibilityChanged(ChangeSeverity.BREAKING),
+  MethodModifiersChanged(ChangeSeverity.BREAKING),
+  MethodRemoved(ChangeSeverity.BREAKING),
+  MethodAdded(ChangeSeverity.SAFE),
+  MethodReturnTypeChanged(ChangeSeverity.BREAKING),
+  MethodVisibilityChanged(ChangeSeverity.BREAKING),
+  MethodExceptionsChanged(ChangeSeverity.BREAKING),
+  ClassAnnotationsChanged(ChangeSeverity.WARNING),
+  FieldAnnotationsChanged(ChangeSeverity.WARNING),
+  MethodAnnotationsChanged(ChangeSeverity.WARNING);
 
-    private final ChangeSeverity severity;
+  private final ChangeSeverity severity;
 
-    DiffType(final ChangeSeverity severity) {
-        this.severity = severity;
-    }
+  DiffType(final ChangeSeverity severity) {
+    this.severity = severity;
+  }
 
-    public ChangeSeverity getSeverity() {
-        return severity;
-    }
+  public ChangeSeverity getSeverity() {
+    return severity;
+  }
 }

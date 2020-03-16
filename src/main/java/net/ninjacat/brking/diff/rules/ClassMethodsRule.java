@@ -1,22 +1,31 @@
 package net.ninjacat.brking.diff.rules;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.collect.ImmutableList;
 import net.ninjacat.brking.api.ApiClass;
 import net.ninjacat.brking.diff.DiffElement;
-import net.ninjacat.brking.diff.rules.methods.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.ninjacat.brking.diff.rules.methods.MethodAdded;
+import net.ninjacat.brking.diff.rules.methods.MethodAnnotationsChanged;
+import net.ninjacat.brking.diff.rules.methods.MethodDiffRule;
+import net.ninjacat.brking.diff.rules.methods.MethodExceptionsChanged;
+import net.ninjacat.brking.diff.rules.methods.MethodModifiersChanged;
+import net.ninjacat.brking.diff.rules.methods.MethodPool;
+import net.ninjacat.brking.diff.rules.methods.MethodRemoved;
+import net.ninjacat.brking.diff.rules.methods.MethodReturnTypeChanged;
+import net.ninjacat.brking.diff.rules.methods.MethodVisibilityChanged;
 
 public class ClassMethodsRule implements ClassDiffRule {
 
     private static final List<MethodDiffRule> methodRules = List.of(
-            new MethodVisibilityChanged(),
-            new MethodModifiersChanged(),
-            new MethodReturnTypeChanged(),
-            new MethodRemoved(),
-            new MethodExceptionsChanged(),
-            new MethodAdded()
+        new MethodVisibilityChanged(),
+        new MethodModifiersChanged(),
+        new MethodReturnTypeChanged(),
+        new MethodRemoved(),
+        new MethodExceptionsChanged(),
+        new MethodAdded(),
+        new MethodAnnotationsChanged()
     );
 
     @Override

@@ -1,12 +1,13 @@
 package net.ninjacat.brking.api;
 
 import org.immutables.value.Value;
+import org.immutables.value.Value.Parameter;
 
 @Value.Immutable
 public interface ApiAnnotation {
-    @Value.Parameter(order = 0)
-    String name();
+  @Parameter(order = 1)
+  String descriptor();
 
-    @Value.Parameter(order = 1)
-    Object value();
+  @Parameter(order = 2)
+  boolean visible();
 }
