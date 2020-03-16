@@ -1,13 +1,5 @@
 package net.ninjacat.brking;
 
-import com.google.common.base.Strings;
-import io.vavr.control.Try;
-import net.ninjacat.brking.api.ClassPool;
-import net.ninjacat.brking.logging.ConsoleLogger;
-import net.ninjacat.brking.logging.Logger;
-import net.ninjacat.brking.net.Downloader;
-import org.immutables.value.Value;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -15,6 +7,14 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.jar.JarFile;
+
+import com.google.common.base.Strings;
+import io.vavr.control.Try;
+import net.ninjacat.brking.api.ClassPool;
+import net.ninjacat.brking.logging.ConsoleLogger;
+import net.ninjacat.brking.logging.Logger;
+import net.ninjacat.brking.net.Downloader;
+import org.immutables.value.Value;
 
 import static net.ninjacat.brking.utils.FuncUtils.firstNonEmpty;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -89,9 +89,8 @@ public class Director {
                        .fgBrightBlue().a(artifacts.currentJar())
                        .reset().toString());
     try {
-      final ClassPool older = ClassPool.of(new JarFile(artifacts.currentJar()));
-      final ClassPool newer = ClassPool.of(new JarFile(artifacts.currentJar()));
-
+      final ClassPool older = ClassPool.of(new JarFile(artifacts.currentJar()), true);
+      final ClassPool newer = ClassPool.of(new JarFile(artifacts.currentJar()), false);
     } catch (final IOException ex) {
       throw new UncheckedIOException(ex);
     }

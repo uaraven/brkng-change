@@ -48,6 +48,12 @@ public final class ApiClassParser extends ClassVisitor {
     return classParser.getApiClass();
   }
 
+  public static ApiClass of(final String className, final boolean publicOnly) {
+    final var classParser = new ApiClassParser(publicOnly);
+    classParser.readClass(className);
+    return classParser.getApiClass();
+  }
+
   public static ApiClass ofPublic(final String className) {
     final var jarClassReader = new ApiClassParser(true);
     jarClassReader.readClass(className);

@@ -1,15 +1,15 @@
 package net.ninjacat.brking.diff.rules;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import net.ninjacat.brking.api.ApiClass;
 import net.ninjacat.brking.diff.DiffElement;
 import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 import net.ninjacat.brking.utils.AsmUtils;
 import org.objectweb.asm.Opcodes;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ClassModifiersChanged implements ClassDiffRule {
     @Override
@@ -24,7 +24,6 @@ public class ClassModifiersChanged implements ClassDiffRule {
                     .diffType(DiffType.ClassModifiersChanged)
                     .changedObject(older)
                     .changedTo(String.join(",", modifiers))
-                    .description("Class modifiers has changed to ${changed.to}")
                     .build()).stream()
                     .collect(Collectors.toUnmodifiableList());
         } else {

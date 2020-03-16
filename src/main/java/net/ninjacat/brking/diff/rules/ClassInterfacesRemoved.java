@@ -1,13 +1,13 @@
 package net.ninjacat.brking.diff.rules;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import net.ninjacat.brking.api.ApiClass;
 import net.ninjacat.brking.diff.DiffElement;
 import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ClassInterfacesRemoved implements ClassDiffRule {
   @Override
@@ -26,7 +26,6 @@ public class ClassInterfacesRemoved implements ClassDiffRule {
                     .changedObject(older)
                     .changedFrom(intf)
                     .changedTo("")
-                    .description("Interface '${changed.to}' has been removed")
                     .diffType(DiffType.ClassInterfaceRemoved)
                     .build())
             .collect(Collectors.toUnmodifiableList());

@@ -1,11 +1,11 @@
 package net.ninjacat.brking.diff.rules;
 
+import java.util.List;
+
 import net.ninjacat.brking.api.ApiClass;
 import net.ninjacat.brking.diff.DiffElement;
 import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
-
-import java.util.List;
 
 public class ClassVersion implements ClassDiffRule {
     @Override
@@ -15,15 +15,15 @@ public class ClassVersion implements ClassDiffRule {
         switch (Integer.compare(older.version(), newer.version())) {
             case -1:
                 builder.diffType(DiffType.ClassVersionIncremented)
-                        .changedFrom(String.valueOf(older.version()))
-                        .changedTo(String.valueOf(newer.version()))
-                        .description("Bytecode version has changed from ${changed.from} to ${changed.to}");
+                       .changedFrom(String.valueOf(older.version()))
+                       .changedTo(String.valueOf(newer.version()));
                 break;
             case 0:
                 return List.of();
             case 1:
                 builder.diffType(DiffType.ClassVersionDecremented)
-                        .description("Bytecode version has changed from ${changed.from} to ${changed.to}");
+                       .changedFrom(String.valueOf(older.version()))
+                       .changedTo(String.valueOf(newer.version()));
                 break;
         }
         return List.of(builder.build());

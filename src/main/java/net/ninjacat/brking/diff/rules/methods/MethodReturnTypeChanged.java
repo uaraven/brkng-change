@@ -1,5 +1,8 @@
 package net.ninjacat.brking.diff.rules.methods;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.vavr.Tuple;
 import net.ninjacat.brking.api.ApiMethod;
 import net.ninjacat.brking.api.ApiObject;
@@ -7,9 +10,6 @@ import net.ninjacat.brking.api.ApiObjectPool;
 import net.ninjacat.brking.diff.DiffElement;
 import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class MethodReturnTypeChanged implements MethodDiffRule {
 
@@ -27,7 +27,6 @@ public class MethodReturnTypeChanged implements MethodDiffRule {
                         .changedObject(pair._1())
                         .changedFrom(pair._1().returnType())
                         .changedTo(pair._2().returnType())
-                        .description("Method '${object.name}' return type changed from '${changed.from} to '${changed.to}'")
                         .build())
                 .collect(Collectors.toUnmodifiableList());
 

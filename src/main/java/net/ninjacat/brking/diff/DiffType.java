@@ -1,26 +1,28 @@
 package net.ninjacat.brking.diff;
 
 public enum DiffType {
-    ClassInterfaceAdded(ChangeSeverity.SAFE),
-    ClassInterfaceRemoved(ChangeSeverity.BREAKING),
-    ClassModifiersChanged(ChangeSeverity.BREAKING),
-    ClassVisibilityChanged(ChangeSeverity.BREAKING),
-    ClassVersionIncremented(ChangeSeverity.BREAKING),
-    ClassVersionDecremented(ChangeSeverity.WARNING),
-    ClassSuperClassChanged(ChangeSeverity.BREAKING),
+  ClassAdded(ChangeSeverity.SAFE),
+  ClassRemoved(ChangeSeverity.BREAKING),
+  ClassInterfaceAdded(ChangeSeverity.SAFE),
+  ClassInterfaceRemoved(ChangeSeverity.BREAKING),
+  ClassModifiersChanged(ChangeSeverity.BREAKING),
+  ClassVisibilityChanged(ChangeSeverity.BREAKING),
+  ClassVersionIncremented(ChangeSeverity.BREAKING),
+  ClassVersionDecremented(ChangeSeverity.WARNING),
+  ClassSuperClassChanged(ChangeSeverity.BREAKING),
+  ClassAnnotationsChanged(ChangeSeverity.WARNING),
   FieldModifiersChanged(ChangeSeverity.BREAKING),
   FieldRemoved(ChangeSeverity.BREAKING),
   FieldAdded(ChangeSeverity.SAFE),
   FieldTypeChanged(ChangeSeverity.BREAKING),
   FieldVisibilityChanged(ChangeSeverity.BREAKING),
+  FieldAnnotationsChanged(ChangeSeverity.WARNING),
   MethodModifiersChanged(ChangeSeverity.BREAKING),
   MethodRemoved(ChangeSeverity.BREAKING),
   MethodAdded(ChangeSeverity.SAFE),
   MethodReturnTypeChanged(ChangeSeverity.BREAKING),
   MethodVisibilityChanged(ChangeSeverity.BREAKING),
   MethodExceptionsChanged(ChangeSeverity.BREAKING),
-  ClassAnnotationsChanged(ChangeSeverity.WARNING),
-  FieldAnnotationsChanged(ChangeSeverity.WARNING),
   MethodAnnotationsChanged(ChangeSeverity.WARNING);
 
   private final ChangeSeverity severity;

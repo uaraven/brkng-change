@@ -1,11 +1,11 @@
 package net.ninjacat.brking.diff.rules;
 
+import java.util.List;
+
 import net.ninjacat.brking.api.ApiClass;
 import net.ninjacat.brking.diff.DiffElement;
 import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
-
-import java.util.List;
 
 public class ClassSuperclassChanged implements ClassDiffRule {
     @Override
@@ -18,8 +18,6 @@ public class ClassSuperclassChanged implements ClassDiffRule {
                             .changedFrom(older.superName())
                             .changedTo(newer.superName())
                             .diffType(DiffType.ClassSuperClassChanged)
-                            .description(String.format("Super class changed from '%s' to '%s'", older.superName(),
-                                    newer.superName()))
                             .build()
             );
         } else {
