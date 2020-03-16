@@ -1,12 +1,12 @@
 package net.ninjacat.brking.diff.rules;
 
 import net.ninjacat.brking.api.internal.ApiClassParser;
+import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.rules.p1.Older1;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 
 public class ClassModifiersChangedTest {
 
@@ -20,7 +20,8 @@ public class ClassModifiersChangedTest {
         final var diff = differ.process(older, newer);
 
         assertThat(diff, hasSize(1));
-        assertThat(diff.get(0).description(), containsString("final"));
+        assertThat(diff.get(0).diffType(), is(DiffType.ClassModifiersChanged));
+        assertThat(diff.get(0).changedTo(), containsString("final"));
     }
 
     @Test
@@ -33,7 +34,8 @@ public class ClassModifiersChangedTest {
         final var diff = differ.process(older, newer);
 
         assertThat(diff, hasSize(1));
-        assertThat(diff.get(0).description(), containsString("abstract"));
+        assertThat(diff.get(0).diffType(), is(DiffType.ClassModifiersChanged));
+        assertThat(diff.get(0).changedTo(), containsString("abstract"));
     }
 
 

@@ -4,8 +4,8 @@ import io.vavr.Tuple;
 import net.ninjacat.brking.api.ApiMethod;
 import net.ninjacat.brking.api.ApiObject;
 import net.ninjacat.brking.api.ApiObjectPool;
-import net.ninjacat.brking.diff.ChangeSeverity;
 import net.ninjacat.brking.diff.DiffElement;
+import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 import net.ninjacat.brking.utils.AsmUtils;
 
@@ -24,10 +24,10 @@ public class MethodModifiersChanged implements MethodDiffRule {
                 .filter(pair -> AsmUtils.hasModifierChanged(pair._1(), pair._2()))
                 .map(pair -> ImmutableDiffElement.builder()
                         .ownerClass(reference)
-                        .severity(ChangeSeverity.BREAKING)
-                        .description(String.format("Method '%s' modifiers changed to '%s'",
-                                pair._1().apiName(),
-                                AsmUtils.modifiersToString(pair._2().access())))
+                        .changedObject(pair._1())
+                        .changedFrom(AsmUtils.modifiersToString(pair._1().access()))
+                        .changedTo(AsmUtils.modifiersToString(pair._2().access()))
+                        .diffType(DiffType.MethodModifiersChanged)
                         .build())
                 .collect(Collectors.toUnmodifiableList());
 

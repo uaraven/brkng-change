@@ -1,11 +1,12 @@
 package net.ninjacat.brking.diff.rules.fields;
 
 import net.ninjacat.brking.api.internal.ApiClassParser;
+import net.ninjacat.brking.diff.DiffType;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.matchesRegex;
+import static org.hamcrest.Matchers.is;
 
 public class FieldTypeChangedTest {
 
@@ -22,7 +23,9 @@ public class FieldTypeChangedTest {
         final var diff = differ.process(older, olderFields, newerFields);
 
         assertThat(diff, hasSize(1));
-        assertThat(diff.get(0).description(), matchesRegex(".*'public java.lang.String field'.*changed to 'int'"));
+        assertThat(diff.get(0).diffType(), is(DiffType.FieldTypeChanged));
+        assertThat(diff.get(0).changedTo(), is("int"));
+        assertThat(diff.get(0).changedFrom(), is("java.lang.String"));
     }
 
 

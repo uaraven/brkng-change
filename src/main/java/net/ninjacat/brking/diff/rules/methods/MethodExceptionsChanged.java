@@ -4,8 +4,8 @@ import io.vavr.Tuple;
 import net.ninjacat.brking.api.ApiMethod;
 import net.ninjacat.brking.api.ApiObject;
 import net.ninjacat.brking.api.ApiObjectPool;
-import net.ninjacat.brking.diff.ChangeSeverity;
 import net.ninjacat.brking.diff.DiffElement;
+import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 
 import java.util.List;
@@ -23,10 +23,10 @@ public class MethodExceptionsChanged implements MethodDiffRule {
                 .filter(pair -> !pair._1().exceptions().equals(pair._2().exceptions()))
                 .map(pair -> ImmutableDiffElement.builder()
                         .ownerClass(reference)
-                        .severity(ChangeSeverity.BREAKING)
-                        .description(String.format("Method '%s' exceptions changed to '%s'",
-                                pair._1().apiName(),
-                                String.join(",", pair._2().exceptions())))
+                        .changedObject(pair._1())
+                        .changedFrom(String.join(",", pair._1().exceptions()))
+                        .changedTo(String.join(",", pair._2().exceptions()))
+                        .diffType(DiffType.MethodExceptionsChanged)
                         .build())
                 .collect(Collectors.toUnmodifiableList());
 

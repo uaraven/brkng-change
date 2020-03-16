@@ -4,8 +4,8 @@ import io.vavr.Tuple;
 import net.ninjacat.brking.api.ApiMethod;
 import net.ninjacat.brking.api.ApiObject;
 import net.ninjacat.brking.api.ApiObjectPool;
-import net.ninjacat.brking.diff.ChangeSeverity;
 import net.ninjacat.brking.diff.DiffElement;
+import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 import net.ninjacat.brking.utils.AsmUtils;
 
@@ -24,10 +24,10 @@ public class MethodVisibilityChanged implements MethodDiffRule {
                 .filter(pair -> AsmUtils.hasAccessChangedToStricter(pair._1().access(), pair._2().access()))
                 .map(pair -> ImmutableDiffElement.builder()
                         .ownerClass(reference)
-                        .severity(ChangeSeverity.BREAKING)
-                        .description(String.format("Method '%s' visibility changed to '%s'",
-                                pair._1().apiName(),
-                                AsmUtils.visibilityToString(pair._2().access())))
+                        .diffType(DiffType.MethodVisibilityChanged)
+                        .changedObject(pair._1())
+                        .changedFrom(AsmUtils.visibilityToString(pair._1().access()))
+                        .changedTo(AsmUtils.visibilityToString(pair._2().access()))
                         .build())
                 .collect(Collectors.toUnmodifiableList());
 

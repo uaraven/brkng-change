@@ -1,8 +1,8 @@
 package net.ninjacat.brking.diff.rules;
 
 import net.ninjacat.brking.api.ApiClass;
-import net.ninjacat.brking.diff.ChangeSeverity;
 import net.ninjacat.brking.diff.DiffElement;
+import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class ClassVersion implements ClassDiffRule {
 
         switch (Integer.compare(older.version(), newer.version())) {
             case -1:
-                builder.severity(ChangeSeverity.WARNING)
+                builder.diffType(DiffType.ClassVersionIncremented)
                         .changedFrom(String.valueOf(older.version()))
                         .changedTo(String.valueOf(newer.version()))
                         .description("Bytecode version has changed from ${changed.from} to ${changed.to}");
@@ -22,7 +22,7 @@ public class ClassVersion implements ClassDiffRule {
             case 0:
                 return List.of();
             case 1:
-                builder.severity(ChangeSeverity.SAFE)
+                builder.diffType(DiffType.ClassVersionDecremented)
                         .description("Bytecode version has changed from ${changed.from} to ${changed.to}");
                 break;
         }

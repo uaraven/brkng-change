@@ -1,8 +1,8 @@
 package net.ninjacat.brking.diff.rules;
 
 import net.ninjacat.brking.api.ApiClass;
-import net.ninjacat.brking.diff.ChangeSeverity;
 import net.ninjacat.brking.diff.DiffElement;
+import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class ClassSuperclassChanged implements ClassDiffRule {
                             .changedObject(older)
                             .changedFrom(older.superName())
                             .changedTo(newer.superName())
-                            .severity(ChangeSeverity.BREAKING)
+                            .diffType(DiffType.ClassSuperClassChanged)
                             .description(String.format("Super class changed from '%s' to '%s'", older.superName(),
                                     newer.superName()))
                             .build()

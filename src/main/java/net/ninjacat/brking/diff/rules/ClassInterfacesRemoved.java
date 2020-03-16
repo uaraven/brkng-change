@@ -1,8 +1,8 @@
 package net.ninjacat.brking.diff.rules;
 
 import net.ninjacat.brking.api.ApiClass;
-import net.ninjacat.brking.diff.ChangeSeverity;
 import net.ninjacat.brking.diff.DiffElement;
+import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 
 import java.util.List;
@@ -24,9 +24,10 @@ public class ClassInterfacesRemoved implements ClassDiffRule {
                     .builder()
                     .ownerClass(older)
                     .changedObject(older)
-                    .changedTo(intf)
+                    .changedFrom(intf)
+                    .changedTo("")
                     .description("Interface '${changed.to}' has been removed")
-                    .severity(ChangeSeverity.BREAKING)
+                    .diffType(DiffType.ClassInterfaceRemoved)
                     .build())
             .collect(Collectors.toUnmodifiableList());
   }

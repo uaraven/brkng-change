@@ -3,8 +3,8 @@ package net.ninjacat.brking.diff.rules.fields;
 import net.ninjacat.brking.api.ApiField;
 import net.ninjacat.brking.api.ApiObject;
 import net.ninjacat.brking.api.ApiObjectPool;
-import net.ninjacat.brking.diff.ChangeSeverity;
 import net.ninjacat.brking.diff.DiffElement;
+import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 
 import java.util.List;
@@ -27,9 +27,10 @@ public class FieldRemoved implements FieldDiffRule {
                 .map(field -> ImmutableDiffElement
                         .builder()
                         .ownerClass(reference)
-                        .description(
-                                String.format("Field '%s' has been removed", olderFields.get(field).apiName()))
-                        .severity(ChangeSeverity.BREAKING)
+                        .changedObject(olderFields.get(field))
+                        .changedFrom(olderFields.get(field).apiName())
+                        .changedTo("")
+                        .diffType(DiffType.FieldRemoved)
                         .build())
                 .collect(Collectors.toUnmodifiableList());
     }

@@ -3,15 +3,17 @@ package net.ninjacat.brking.diff;
 import net.ninjacat.brking.api.ApiObject;
 import org.immutables.value.Value.Immutable;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 @Immutable
 public interface DiffElement {
   ApiObject ownerClass();
 
-  String description();
+    @Nullable
+    String description();
 
-  ChangeSeverity severity();
+    DiffType diffType();
 
   /**
    * What object has changed - class, field or method
@@ -24,6 +26,7 @@ public interface DiffElement {
    * String representation of what has changed, will be available as ${changed.from}
    * in the templating context
    */
+  @Nullable
   String changedFrom();
 
   /**

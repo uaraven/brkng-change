@@ -3,8 +3,8 @@ package net.ninjacat.brking.diff.rules.methods;
 import net.ninjacat.brking.api.ApiMethod;
 import net.ninjacat.brking.api.ApiObject;
 import net.ninjacat.brking.api.ApiObjectPool;
-import net.ninjacat.brking.diff.ChangeSeverity;
 import net.ninjacat.brking.diff.DiffElement;
+import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 
 import java.util.List;
@@ -20,9 +20,10 @@ public class MethodRemoved implements MethodDiffRule {
                 .filter(e -> !newer.all().containsKey(e.getKey()))
                 .map(e -> ImmutableDiffElement.builder()
                         .ownerClass(reference)
-                        .severity(ChangeSeverity.BREAKING)
-                        .description(String.format("Method '%s' was removed",
-                                e.getValue().apiName()))
+                        .diffType(DiffType.MethodRemoved)
+                        .changedObject(e.getValue())
+                        .changedFrom(e.getValue().apiName())
+                        .changedTo("")
                         .build())
                 .collect(Collectors.toUnmodifiableList());
 
