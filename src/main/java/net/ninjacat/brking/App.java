@@ -37,7 +37,7 @@ public final class App {
     try {
       new Director().execute(params);
     } catch (final Exception ex) {
-      ex.printStackTrace();
+//      ex.printStackTrace();
       ConsoleLogger.getLogger().err(ex.getMessage());
     }
   }

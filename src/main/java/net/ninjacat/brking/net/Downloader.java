@@ -1,5 +1,9 @@
 package net.ninjacat.brking.net;
 
+import io.vavr.control.Try;
+import net.ninjacat.brking.logging.ConsoleLogger;
+import net.ninjacat.brking.logging.Logger;
+
 import java.io.File;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -10,10 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
-
-import io.vavr.control.Try;
-import net.ninjacat.brking.logging.ConsoleLogger;
-import net.ninjacat.brking.logging.Logger;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -40,7 +40,7 @@ public class Downloader {
     return Try.of(() -> File.createTempFile("tmp", fileName).getAbsoluteFile().toPath())
               .fold(CompletableFuture::failedFuture,
                     path -> client.sendAsync(req, HttpResponse.BodyHandlers.ofFile(path))
-                                  .thenAccept(resp -> handleResponse(resp))
+                            .thenAccept(this::handleResponse)
                                   .thenApply(v -> path.toFile())
               );
   }
@@ -48,10 +48,13 @@ public class Downloader {
   private void handleResponse(final HttpResponse<Path> resp) {
     final Path fileName = Paths.get(resp.uri().getPath()).getFileName();
     if (resp.statusCode() < 400) {
+      fileName.toFile().deleteOnExit();
       LOGGER.print(ansi().a("Downloaded ").fgBrightBlue().a("%s").fgDefault().toString(), fileName);
     }
     else {
-      LOGGER.err("Failed to download %s. Http Status Code: %d", fileName, resp.statusCode());
+      final var msg = String.format("Failed to download %s. Http Status Code: %d", fileName, resp.statusCode());
+      LOGGER.err(msg);
+      throw new RuntimeException(msg);
     }
   }
 }

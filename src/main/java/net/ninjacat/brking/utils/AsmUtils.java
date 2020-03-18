@@ -83,4 +83,8 @@ public final class AsmUtils {
     public static Map<Integer, String> getModifiers() {
         return MODIFIERS;
     }
+
+    public static boolean isSynthetic(final int access) {
+        return (access & Opcodes.ACC_SYNTHETIC) != 0;
+    }
 }

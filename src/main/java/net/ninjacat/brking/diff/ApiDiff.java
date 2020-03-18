@@ -1,14 +1,14 @@
 package net.ninjacat.brking.diff;
 
+import com.google.common.collect.Streams;
+import net.ninjacat.brking.api.ClassPool;
+import net.ninjacat.brking.diff.rules.ClassComparator;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.google.common.collect.Streams;
-import net.ninjacat.brking.api.ClassPool;
-import net.ninjacat.brking.diff.rules.ClassComparator;
 
 import static java.util.Comparator.reverseOrder;
 
@@ -71,11 +71,11 @@ public class ApiDiff {
     return olderClassPool.all().entrySet().stream()
                          .filter(it -> !newerClasses.contains(it.getKey()))
                          .map(it -> ImmutableDiffElement.builder()
-                                                        .diffType(DiffType.ClassRemoved)
-                                                        .changedObject(it.getValue())
-                                                        .ownerClass(it.getValue())
-                                                        .changedFrom("")
-                                                        .changedTo(it.getValue().apiName())
+                                 .diffType(DiffType.ClassRemoved)
+                                 .changedObject(it.getValue())
+                                 .ownerClass(it.getValue())
+                                 .changedFrom(it.getValue().apiName())
+                                 .changedTo("")
                                                         .build())
                          .collect(Collectors.toUnmodifiableList());
   }

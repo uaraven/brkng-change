@@ -1,9 +1,9 @@
 package net.ninjacat.brking;
 
-import java.nio.file.Paths;
-
 import io.vavr.collection.List;
 import org.immutables.value.Value;
+
+import java.nio.file.Paths;
 
 @Value.Immutable
 public abstract class Coordinates {
@@ -16,10 +16,6 @@ public abstract class Coordinates {
   @Value.Parameter(order = 2)
   public abstract String version();
 
-  public SemVer versionAsSemVer() {
-    return SemVer.of(version());
-  }
-
   public String getJarName() {
     return artifactId() + "-" + version() + ".jar";
   }
@@ -29,7 +25,7 @@ public abstract class Coordinates {
                 .toString();
   }
 
-  public static Coordinates fromGradle(final String gradleCoords) {
+  public static Coordinates parse(final String gradleCoords) {
     final var parts = List.of(gradleCoords.split(":")).padTo(3, "");
     if (parts.length() > 3) {
       throw new IllegalArgumentException("Packaging is not supported for coordinates, JAR is always assumed");

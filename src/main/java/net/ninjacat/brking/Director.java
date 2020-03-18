@@ -1,128 +1,123 @@
 package net.ninjacat.brking;
 
+import io.vavr.control.Try;
+import net.ninjacat.brking.diff.ApiDiff;
+import net.ninjacat.brking.diff.ApiDiff.SortType;
+import net.ninjacat.brking.logging.ConsoleLogger;
+import net.ninjacat.brking.logging.Logger;
+import net.ninjacat.brking.net.Downloader;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.immutables.value.Value;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URI;
-import java.util.Optional;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.jar.JarFile;
 
-import com.google.common.base.Strings;
-import io.vavr.control.Try;
-import net.ninjacat.brking.api.ClassPool;
-import net.ninjacat.brking.logging.ConsoleLogger;
-import net.ninjacat.brking.logging.Logger;
-import net.ninjacat.brking.net.Downloader;
-import org.immutables.value.Value;
-
-import static net.ninjacat.brking.utils.FuncUtils.firstNonEmpty;
+import static io.vavr.API.*;
+import static io.vavr.Predicates.is;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class Director {
   private static final Logger LOGGER = ConsoleLogger.getLogger();
 
   public void execute(final Args params) {
-    final ComparisonArtifacts artifacts = usingLocalFiles(params)
-                                          ? getLocalFiles(params)
-                                          : downloadFromMaven(params);
-    compareApis(artifacts);
+    final ComparisonArtifacts artifacts = getArtifacts(params);
+    compareApis(params, artifacts);
   }
 
-  private ComparisonArtifacts downloadFromMaven(final Args params) {
-    final var currentCoordinates = paramsToSourceCoordinates(params);
-    final var previousCoordinates = ImmutableCoordinates.copyOf(currentCoordinates)
-                                                        .withVersion(params.getPreviousVersion());
-
-    if (currentCoordinates.versionAsSemVer().compareTo(previousCoordinates.versionAsSemVer()) <= 0) {
-      LOGGER.fail("Current version (%s) must be higher than previous version (%s)",
-                  currentCoordinates.version(), previousCoordinates.version());
-    }
-
-    LOGGER.print(ansi().a("Comparing public API of ")
-                       .fgBrightBlue().a(currentCoordinates.getJarName())
-                       .fgDefault().a(" with ")
-                       .fgBrightBlue().a(previousCoordinates.getJarName()).fgDefault().toString());
-
-    final var downloader = new Downloader();
-    final var currentFile = downloader.download(
-        URI.create(params.getMavenRepo()).resolve(currentCoordinates.getFullPath()), currentCoordinates.getJarName());
-    final var previousFile = downloader
-        .download(URI.create(params.getMavenRepo()).resolve(previousCoordinates.getFullPath()),
-                  previousCoordinates.getJarName());
+  private ComparisonArtifacts getArtifacts(final Args params) {
+    final CompletableFuture<File> currentFile = getJar(params, params.getCurrentJar());
+    final CompletableFuture<File> previousFile = getJar(params, params.getPreviousJar());
 
     return CompletableFuture
-        .allOf(currentFile, previousFile)
-        .thenApply(ignored -> verifyDownloads(currentFile, previousFile))
-        .join();
+            .allOf(currentFile, previousFile)
+            .thenApply(ignored -> verifyDownloads(currentFile, previousFile))
+            .join();
   }
 
-  private ComparisonArtifacts getLocalFiles(final Args params) {
-    final var previousJar = new File(params.getPreviousJar());
-    final var currentJar = new File(params.getCurrentJar());
-    if (!previousJar.exists()) {
-      LOGGER.fail("File %s does not exist", previousJar);
+  private CompletableFuture<File> getJar(final Args args, final String jarPointer) {
+    final var sourceType = getSourceType(jarPointer);
+    return Match(sourceType).of(
+            Case($(is(SourceType.FILE)), f -> getFile(jarPointer)),
+            Case($(is(SourceType.MAVEN)), f -> getMavenArtifact(args, jarPointer)),
+            Case($(is(SourceType.URL)), f -> getFileFromUrl(jarPointer))
+    );
+  }
+
+  private SourceType getSourceType(final String jarPointer) {
+    if (Files.exists(Paths.get(jarPointer))) {
+      return SourceType.FILE;
+    } else if (isMaven(jarPointer)) {
+      return SourceType.MAVEN;
+    } else if (Try.of(() -> URI.create(jarPointer)).isSuccess()) {
+      return SourceType.URL;
+    } else {
+      throw new IllegalArgumentException("Invalid source: " + jarPointer);
     }
-    if (!currentJar.exists()) {
-      LOGGER.fail("File %s does not exist", currentJar);
-    }
-    return ImmutableComparisonArtifacts.of(currentJar, previousJar);
   }
 
-  private boolean usingLocalFiles(final Args params) {
-    return !Strings.isNullOrEmpty(params.getPreviousJar()) && !Strings.isNullOrEmpty(params.getCurrentJar());
+  private CompletableFuture<File> getFileFromUrl(final String url) {
+    final var jarName = Try.of(() -> Files.createTempFile("diff", ".jar"))
+            .getOrElseThrow((Function<Throwable, RuntimeException>) RuntimeException::new);
+    jarName.toFile().deleteOnExit();
+
+    LOGGER.print(ansi().a("Downloading from ").fgBrightBlue().a(url).reset().toString());
+    final var downloader = new Downloader();
+    return downloader.download(URI.create(url), jarName.toString());
   }
 
-  private ComparisonArtifacts verifyDownloads(final CompletableFuture<File> currentFile,
-                                              final CompletableFuture<File> previousFile) {
-    final var current = Try.of(currentFile::get).onFailure(err -> LOGGER.fail(err.getMessage())).get();
-    final var previous = Try.of(previousFile::get).onFailure(err -> LOGGER.fail(err.getMessage())).get();
-    current.deleteOnExit();
-    previous.deleteOnExit();
-    return ImmutableComparisonArtifacts.of(current, previous);
+  private CompletableFuture<File> getFile(final String path) {
+    LOGGER.print(ansi().a("Using file ")
+            .fgBrightBlue().a(path).reset().toString());
+
+    return CompletableFuture.completedFuture(new File(path));
   }
 
-  private void compareApis(final ComparisonArtifacts artifacts) {
+  private CompletableFuture<File> getMavenArtifact(final Args args, final String coordinates) {
+    final var coords = Coordinates.parse(coordinates);
+    LOGGER.print(ansi().a("Retrieving ")
+            .fgBrightBlue().a(coords.getJarName())
+            .fgDefault().a(" from Maven").reset().toString());
+    final var downloader = new Downloader();
+    return downloader.download(URI.create(args.getMavenRepo()).resolve(coords.getFullPath()), coords.getJarName());
+  }
+
+  private boolean isMaven(final String coords) {
+    return Try.of(() -> new DefaultArtifact(coords)).isSuccess();
+  }
+
+  private ComparisonArtifacts verifyDownloads(
+          final CompletableFuture<File> currentFile,
+          final CompletableFuture<File> previousFile) {
+    final var current = Try.of(currentFile::get);
+    final var previous = Try.of(previousFile::get);
+
+    return current.flatMap(cur -> previous.map(prev -> ImmutableComparisonArtifacts.of(cur, prev)))
+            .getOrElseThrow((Function<Throwable, RuntimeException>) RuntimeException::new);
+  }
+
+  private void compareApis(final Args params, final ComparisonArtifacts artifacts) {
     LOGGER.print(ansi().a("Comparing public APIs of ")
-                       .fgBrightBlue().a(artifacts.previousJar())
-                       .fgDefault().a(" and ")
-                       .fgBrightBlue().a(artifacts.currentJar())
-                       .reset().toString());
+            .fgBrightBlue().a(artifacts.previousJar().toPath().getFileName())
+            .fgDefault().a(" and ")
+            .fgBrightBlue().a(artifacts.currentJar().toPath().getFileName())
+            .reset().toString());
     try {
-      final ClassPool older = ClassPool.of(new JarFile(artifacts.currentJar()), true);
-      final ClassPool newer = ClassPool.of(new JarFile(artifacts.currentJar()), false);
+      final var diff = ApiDiff.ofJars(
+              new JarFile(artifacts.previousJar()),
+              new JarFile(artifacts.currentJar()),
+              SortType.BY_SEVERITY);
+
+      final var printer = params.getOutputFormat().getPrinter(params);
+      printer.print(diff);
     } catch (final IOException ex) {
       throw new UncheckedIOException(ex);
-    }
-  }
-
-  private Coordinates paramsToSourceCoordinates(final Args params) {
-    final var gradleParams = Optional.ofNullable(params.getCoordinates());
-    final var groupId = Optional.ofNullable(params.getGroupId());
-    final var artifactId = Optional.ofNullable(params.getArtifactId());
-    final var version = Optional.ofNullable(params.getVersion());
-    final var prevVersion = Optional.ofNullable(params.getPreviousVersion());
-
-    if (prevVersion.isEmpty()) {
-      throw new IllegalArgumentException("Previous version is required");
-    }
-    final var mavenParams =
-        groupId.flatMap(gr -> artifactId.flatMap(art -> version.flatMap(v -> Optional.of(gr + ":" + art + ":" + v))));
-
-    if (gradleParams.isPresent() && mavenParams.isPresent()) {
-      throw new IllegalArgumentException(ansi().a("Please specify ")
-                                               .fgBrightDefault().a("either")
-                                               .fgDefault().a(" coordinates in gradle format ")
-                                               .fgBrightDefault().a("or")
-                                               .fgDefault().a(" use --groupId, --artifactId, --version options").reset()
-                                               .toString());
-    }
-    final var coordinates = firstNonEmpty(gradleParams, mavenParams).map(Coordinates::fromGradle);
-    if (coordinates.isEmpty()) {
-      throw new IllegalArgumentException("Coordinates of the artifact are not provided");
-    }
-    else {
-      return coordinates.get();
     }
   }
 
@@ -133,6 +128,12 @@ public class Director {
 
     @Value.Parameter(order = 1)
     File previousJar();
+  }
+
+  private enum SourceType {
+    MAVEN,
+    FILE,
+    URL
   }
 }
 
