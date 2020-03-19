@@ -20,7 +20,7 @@ public class FieldVisibilityChangedTest {
 
         final var differ = new FieldVisibilityChanged();
 
-        final var diff = differ.process(older, olderFields, newerFields);
+        final var diff = differ.process(older, olderFields, newerFields, null);
 
         assertThat(diff, hasSize(1));
         assertThat(diff.get(0).diffType(), is(DiffType.FieldVisibilityChanged));

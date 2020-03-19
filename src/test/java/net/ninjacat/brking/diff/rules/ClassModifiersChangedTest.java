@@ -17,7 +17,7 @@ public class ClassModifiersChangedTest {
 
         final var differ = new ClassModifiersChanged();
 
-        final var diff = differ.process(older, newer);
+        final var diff = differ.process(older, newer, null);
 
         assertThat(diff, hasSize(1));
         assertThat(diff.get(0).diffType(), is(DiffType.ClassModifiersChanged));
@@ -31,7 +31,7 @@ public class ClassModifiersChangedTest {
 
         final var differ = new ClassModifiersChanged();
 
-        final var diff = differ.process(older, newer);
+        final var diff = differ.process(older, newer, null);
 
         assertThat(diff, hasSize(1));
         assertThat(diff.get(0).diffType(), is(DiffType.ClassModifiersChanged));

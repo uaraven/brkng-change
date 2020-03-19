@@ -21,7 +21,7 @@ public class MethodExceptionsChangedTest {
 
         final var differ = new MethodExceptionsChanged();
 
-        final var diff = differ.process(older, olderFields, newerFields);
+        final var diff = differ.process(older, olderFields, newerFields, null);
 
         assertThat(diff, hasSize(1));
         assertThat(diff.get(0).changedTo(), is("java.lang.IllegalArgumentException,java.lang.NumberFormatException"));

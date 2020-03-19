@@ -102,10 +102,10 @@ to detect changes from `private` to `public`, etc.
 ### Extra points
 
 - Field 
-    - [ ] Type changed to subclass of previous one
+    - [x] Type changed to subclass of previous one
 - Method
-    - [ ] Return type changed to subclass of previous one
-    - [ ] Parameter type changed to superclass of previous one
+    - [x] Return type changed to subclass of previous one
+    - [ ] Parameter type changed to superclass of previous one - this is not detected as change in signature causes method added/removed detection 
 - Class 
-    - [ ] Super class changed to subclass of previous one
+    - [x] Super class changed to subclass of previous one
    

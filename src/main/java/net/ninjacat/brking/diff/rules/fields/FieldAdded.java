@@ -3,6 +3,7 @@ package net.ninjacat.brking.diff.rules.fields;
 import net.ninjacat.brking.api.ApiField;
 import net.ninjacat.brking.api.ApiObject;
 import net.ninjacat.brking.api.ApiObjectPool;
+import net.ninjacat.brking.diff.DiffContext;
 import net.ninjacat.brking.diff.DiffElement;
 import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
@@ -15,7 +16,8 @@ public class FieldAdded implements FieldDiffRule {
     @Override
     public List<DiffElement> process(final ApiObject reference,
                                      final ApiObjectPool<ApiField> older,
-                                     final ApiObjectPool<ApiField> newer) {
+                                     final ApiObjectPool<ApiField> newer,
+                                     final DiffContext context) {
         final var olderFields = older.all();
         final var newerFields = newer.all();
 

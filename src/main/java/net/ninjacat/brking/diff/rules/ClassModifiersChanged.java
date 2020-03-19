@@ -1,19 +1,20 @@
 package net.ninjacat.brking.diff.rules;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import net.ninjacat.brking.api.ApiClass;
+import net.ninjacat.brking.diff.DiffContext;
 import net.ninjacat.brking.diff.DiffElement;
 import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 import net.ninjacat.brking.utils.AsmUtils;
 import org.objectweb.asm.Opcodes;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ClassModifiersChanged implements ClassDiffRule {
     @Override
-    public List<DiffElement> process(final ApiClass older, final ApiClass newer) {
+    public List<DiffElement> process(final ApiClass older, final ApiClass newer, DiffContext context) {
         final List<String> modifiers = new ArrayList<>();
         checkModifierChange(older, newer, modifiers, Opcodes.ACC_STATIC, "static");
         checkModifierChange(older, newer, modifiers, Opcodes.ACC_ABSTRACT, "abstract");

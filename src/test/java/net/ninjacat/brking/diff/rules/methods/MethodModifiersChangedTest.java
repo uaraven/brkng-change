@@ -19,7 +19,7 @@ public class MethodModifiersChangedTest {
 
         final var differ = new MethodModifiersChanged();
 
-        final var diff = differ.process(older, olderFields, newerFields);
+        final var diff = differ.process(older, olderFields, newerFields, null);
 
         assertThat(diff, hasSize(1));
         assertThat(diff.get(0).diffType(), is(DiffType.MethodModifiersChanged));

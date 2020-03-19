@@ -16,7 +16,7 @@ public class ClassVisibilityChangedTest {
 
         final var differ = new ClassVisibilityChanged();
 
-        final var diff = differ.process(older, newer);
+        final var diff = differ.process(older, newer, null);
 
         assertThat(diff, hasSize(1));
         assertThat(diff.get(0).changedFrom(), is("public"));

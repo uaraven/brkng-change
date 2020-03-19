@@ -16,7 +16,7 @@ public class ClassAnnotationsChangedTest {
 
     final var differ = new ClassAnnotationsChanged();
 
-    final var diff = differ.process(older, newer);
+    final var diff = differ.process(older, newer, null);
 
     assertThat(diff, hasSize(1));
     assertThat(diff.get(0).diffType(), is(DiffType.ClassAnnotationsChanged));

@@ -22,7 +22,7 @@ public class MethodAnnotationsChangedTest {
 
     final var differ = new MethodAnnotationsChanged();
 
-    final var diff = differ.process(older, olderFields, newerFields);
+    final var diff = differ.process(older, olderFields, newerFields, null);
 
     assertThat(diff, hasSize(1));
     assertThat(diff.get(0).changedFrom(), is(Nonnull.class.getName()));

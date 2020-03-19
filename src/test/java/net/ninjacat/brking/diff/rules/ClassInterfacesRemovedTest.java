@@ -18,7 +18,7 @@ public class ClassInterfacesRemovedTest {
 
         final var differ = new ClassInterfacesRemoved();
 
-        final var diff = differ.process(older, newer);
+        final var diff = differ.process(older, newer, null);
 
         assertThat(diff, hasSize(1));
         assertThat(diff.get(0).diffType(), is(DiffType.ClassInterfaceRemoved));
