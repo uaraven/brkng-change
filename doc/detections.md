@@ -85,7 +85,7 @@ as the old method no longer exist.
     - ~~Changing visibility to a more relaxed~~ 
 - Methods 
     - [x] Annotations changed
-    - [ ] Parameter annotations changed
+    - ~~[ ] Parameter annotations changed~~ - requires special compilation flags
     - ~~Changing visibility to a more relaxed~~ 
     
 Note: only public fields in the older class are checked, so there is no possibility

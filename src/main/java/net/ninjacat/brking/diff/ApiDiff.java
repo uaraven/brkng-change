@@ -54,8 +54,7 @@ public class ApiDiff {
   private List<DiffElement> addedClasses() {
     final var olderClasses = olderClassPool.all().keySet();
     return newerClassPool.all().entrySet().stream()
-                         .filter(
-                             it -> !olderClasses.contains(it.getKey()) && it.getValue().isPublic())
+            .filter(it -> !olderClasses.contains(it.getKey()) && it.getValue().isPublic())
                          .map(it -> ImmutableDiffElement.builder()
                                                         .diffType(DiffType.ClassAdded)
                                                         .changedObject(it.getValue())
