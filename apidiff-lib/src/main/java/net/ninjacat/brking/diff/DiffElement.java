@@ -1,22 +1,21 @@
 package net.ninjacat.brking.diff;
 
-import java.util.Map;
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
 import com.google.common.base.Strings;
 import net.ninjacat.brking.api.ApiObject;
 import org.immutables.value.Value.Immutable;
 
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.Optional;
+
 @Immutable
 public abstract class DiffElement {
-  public abstract ApiObject ownerClass();
+    public abstract ApiObject ownerClass();
 
-  @Nullable
-  public abstract String description();
+    @Nullable
+    public abstract String description();
 
-  public abstract DiffType diffType();
+    public abstract DiffType diffType();
 
   /**
    * What object has changed - class, field or method

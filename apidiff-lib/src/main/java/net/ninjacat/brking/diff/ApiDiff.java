@@ -25,6 +25,12 @@ public class ApiDiff {
         this.ignoreNameChanges = ignoreNameChanges;
     }
 
+    public static List<DiffElement> ofJars(final JarFile older, final JarFile newer,
+                                           final SortType sortType, final DiffOptions options) {
+        return new ApiDiff(ClassPool.ofOlder(older), ClassPool.ofNewer(newer), false)
+                .diff(sortType, options);
+    }
+
     public static List<DiffElement> ofJars(final JarFile older, final JarFile newer, final SortType sortType) {
         return new ApiDiff(ClassPool.ofOlder(older), ClassPool.ofNewer(newer), false).diff(sortType);
     }

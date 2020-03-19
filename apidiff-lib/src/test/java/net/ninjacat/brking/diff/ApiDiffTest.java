@@ -1,15 +1,14 @@
 package net.ninjacat.brking.diff;
 
+import com.google.common.annotations.VisibleForTesting;
+import net.ninjacat.brking.diff.ApiDiff.SortType;
+import org.junit.Test;
+
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-
-import com.google.common.annotations.VisibleForTesting;
-import net.ninjacat.brking.diff.ApiDiff.SortType;
-import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;

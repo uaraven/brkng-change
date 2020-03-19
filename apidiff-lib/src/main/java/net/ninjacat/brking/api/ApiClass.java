@@ -1,9 +1,9 @@
 package net.ninjacat.brking.api;
 
-import java.util.List;
-
 import org.immutables.value.Value;
 import org.objectweb.asm.Opcodes;
+
+import java.util.List;
 
 import static net.ninjacat.brking.utils.AsmUtils.className;
 

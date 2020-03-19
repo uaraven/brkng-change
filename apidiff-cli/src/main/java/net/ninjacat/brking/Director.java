@@ -3,6 +3,7 @@ package net.ninjacat.brking;
 import io.vavr.control.Try;
 import net.ninjacat.brking.diff.ApiDiff;
 import net.ninjacat.brking.diff.ApiDiff.SortType;
+import net.ninjacat.brking.diff.ImmutableDiffOptions;
 import net.ninjacat.brking.logging.ConsoleLogger;
 import net.ninjacat.brking.logging.Logger;
 import net.ninjacat.brking.net.Downloader;
@@ -109,10 +110,13 @@ public class Director {
             .fgBrightBlue().a(artifacts.currentJar().toPath().getFileName())
             .reset().toString());
     try {
+      final var options = ImmutableDiffOptions.builder().relaxedInheritance(params.isRelaxed()).build();
+
       final var diff = ApiDiff.ofJars(
               new JarFile(artifacts.previousJar()),
               new JarFile(artifacts.currentJar()),
-              SortType.BY_SEVERITY);
+              SortType.BY_SEVERITY,
+              options);
 
       final var printer = params.getOutputFormat().getPrinter(params);
       printer.print(diff);

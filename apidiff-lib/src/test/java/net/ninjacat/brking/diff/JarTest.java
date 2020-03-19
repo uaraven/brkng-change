@@ -14,8 +14,8 @@ public class JarTest {
   @Test
   public void shouldDiffTwoJars() throws IOException {
     final var diff = ApiDiff.ofJars(
-            new JarFile("testData/joda-convert-2.1.1.jar"),
-            new JarFile("testData/joda-convert-2.1.2.jar"),
+            new JarFile("../testData/joda-convert-2.1.1.jar"),
+            new JarFile("../testData/joda-convert-2.1.2.jar"),
             SortType.BY_SEVERITY);
 
     assertThat(diff, Matchers.hasSize(36));
@@ -25,8 +25,8 @@ public class JarTest {
   @Test
   public void shouldFindClassIncrement() throws IOException {
     final var diff = ApiDiff.ofJars(
-            new JarFile("testData/test-j8.jar"),
-            new JarFile("testData/test-j11.jar"),
+            new JarFile("../testData/test-j8.jar"),
+            new JarFile("../testData/test-j11.jar"),
             SortType.BY_SEVERITY);
 
     assertThat(diff, Matchers.hasSize(1));
@@ -36,8 +36,8 @@ public class JarTest {
   @Test
   public void shouldFindClassDecrement() throws IOException {
     final var diff = ApiDiff.ofJars(
-            new JarFile("testData/test-j11.jar"),
-            new JarFile("testData/test-j8.jar"),
+            new JarFile("../testData/test-j11.jar"),
+            new JarFile("../testData/test-j8.jar"),
             SortType.BY_SEVERITY);
 
     assertThat(diff, Matchers.hasSize(1));

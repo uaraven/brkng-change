@@ -7,17 +7,21 @@
   <groupId>net.ninjacat</groupId>
   <artifactId>apidiff</artifactId>
   <version>0.0.1</version>
+  <packaging>pom</packaging>
 
   <properties>
-    <jcommander.version>1.78</jcommander.version>
     <immutables.version>2.8.2</immutables.version>
     <vavr.version>1.0.0-alpha-3</vavr.version>
     <hamcrest.version>2.2</hamcrest.version>
     <junit.version>4.13</junit.version>
     <guava.version>28.2-jre</guava.version>
     <jansi.version>1.18</jansi.version>
-    <asm.version>7.3.1</asm.version>
   </properties>
+
+  <modules>
+    <module>apidiff-lib</module>
+    <module>apidiff-cli</module>
+  </modules>
 
   <dependencies>
     <dependency>
@@ -32,34 +36,9 @@
       <version>${vavr.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.beust</groupId>
-      <artifactId>jcommander</artifactId>
-      <version>${jcommander.version}</version>
-    </dependency>
-    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.fusesource.jansi</groupId>
-      <artifactId>jansi</artifactId>
-      <version>${jansi.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm</artifactId>
-      <version>${asm.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-util</artifactId>
-      <version>${asm.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-commons</artifactId>
-      <version>${asm.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -67,9 +46,9 @@
       <version>1.1</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-api</artifactId>
-      <version>1.1.0</version>
+      <groupId>org.fusesource.jansi</groupId>
+      <artifactId>jansi</artifactId>
+      <version>${jansi.version}</version>
     </dependency>
 
     <!-- Test scope -->
@@ -99,33 +78,7 @@
           <target>11</target>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.1.1</version>
 
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <archive>
-            <manifest>
-              <mainClass>net.ninjacat.brking.App</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-
-        <executions>
-          <execution>
-            <id>make-assembly</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-
-      </plugin>
     </plugins>
   </build>
 </project>
