@@ -1,9 +1,9 @@
 package net.ninjacat.brking.api.internal;
 
-import javax.annotation.concurrent.Immutable;
-
 import net.ninjacat.brking.api.ApiClass;
 import org.junit.Test;
+
+import javax.annotation.concurrent.Immutable;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 public class ApiClassParserTest {
   @Test
   public void shouldParseClass() {
-    final ApiClass testCls = ApiClassParser.of(TestClass.class.getName());
+    final ApiClass testCls = ApiClassParser.of(TestClass.class.getName()).get();
 
     assertThat(testCls.superName(), is("java.lang.Object"));
     assertThat(testCls.interfaces(), hasSize(0));

@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 import static net.ninjacat.brking.utils.AsmUtils.className;
 import static org.objectweb.asm.ClassReader.*;
 
-public final class ApiClassParser extends ClassVisitor {
+public final class ApiClassParser
+        extends ClassVisitor {
     private final List<ImmutableApiField.Builder> fields = new ArrayList<>();
 
     private final List<ImmutableApiMethod.Builder> methods = new ArrayList<>();
@@ -25,6 +26,7 @@ public final class ApiClassParser extends ClassVisitor {
     private final ImmutableApiClass.Builder apiClassBuilder = ImmutableApiClass.builder();
 
     private final boolean publicOnly;
+
     private String className;
 
     private ApiClassParser(final boolean publicOnly) {
@@ -32,25 +34,25 @@ public final class ApiClassParser extends ClassVisitor {
         this.publicOnly = publicOnly;
     }
 
-    public static ApiClass of(final InputStream stream, final boolean publicOnly) {
+    public static Optional<ApiClass> of(final InputStream stream, final boolean publicOnly) {
         final var classParser = new ApiClassParser(publicOnly);
         classParser.readClass(stream);
         return classParser.getApiClass();
     }
 
-    public static ApiClass of(final String className, final boolean publicOnly) {
+    public static Optional<ApiClass> of(final String className, final boolean publicOnly) {
         final var classParser = new ApiClassParser(publicOnly);
         classParser.readClass(className);
         return classParser.getApiClass();
     }
 
-    public static ApiClass ofPublic(final String className) {
+    public static Optional<ApiClass> ofPublic(final String className) {
         final var jarClassReader = new ApiClassParser(true);
         jarClassReader.readClass(className);
         return jarClassReader.getApiClass();
     }
 
-    public static ApiClass of(final String className) {
+    public static Optional<ApiClass> of(final String className) {
         final var jarClassReader = new ApiClassParser(false);
         jarClassReader.readClass(className);
         return jarClassReader.getApiClass();
@@ -75,12 +77,13 @@ public final class ApiClassParser extends ClassVisitor {
     }
 
     @Override
-    public void visit(final int version,
-                      final int access,
-                      final String name,
-                      final String signature,
-                      final String superName,
-                      final String[] interfaces) {
+    public void visit(
+            final int version,
+            final int access,
+            final String name,
+            final String signature,
+            final String superName,
+            final String[] interfaces) {
         super.visit(version, access, name, signature, superName, interfaces);
         apiClassBuilder.version(version);
         apiClassBuilder.access(access);
@@ -92,11 +95,12 @@ public final class ApiClassParser extends ClassVisitor {
     }
 
     @Override
-    public FieldVisitor visitField(final int access,
-                                   final String name,
-                                   final String descriptor,
-                                   final String signature,
-                                   final Object value) {
+    public FieldVisitor visitField(
+            final int access,
+            final String name,
+            final String descriptor,
+            final String signature,
+            final Object value) {
         if (!publicOnly || AccessLevel.fromAccess(access) == AccessLevel.PUBLIC && !AsmUtils.isSynthetic(access)) {
             final Builder fieldBuilder = ImmutableApiField.builder()
                     .access(access)
@@ -111,11 +115,12 @@ public final class ApiClassParser extends ClassVisitor {
     }
 
     @Override
-    public MethodVisitor visitMethod(final int access,
-                                     final String name,
-                                     final String descriptor,
-                                     final String signature,
-                                     final String[] exceptions) {
+    public MethodVisitor visitMethod(
+            final int access,
+            final String name,
+            final String descriptor,
+            final String signature,
+            final String[] exceptions) {
         if ((!publicOnly || AccessLevel.fromAccess(access) == AccessLevel.PUBLIC) && !AsmUtils.isSynthetic(access)) {
             final var builder = ImmutableApiMethod.builder()
                     .access(access)
@@ -141,14 +146,18 @@ public final class ApiClassParser extends ClassVisitor {
         return super.visitAnnotation(descriptor, visible);
     }
 
-    public ApiClass getApiClass() {
-        return apiClassBuilder
+    public Optional<ApiClass> getApiClass() {
+        if (className.equals("module-info")) {
+            return Optional.empty();
+        }
+        return Optional.of(apiClassBuilder
                 .fields(fields.stream().map(ImmutableApiField.Builder::build).collect(Collectors.toUnmodifiableList()))
                 .methods(methods.stream().map(ImmutableApiMethod.Builder::build).collect(Collectors.toUnmodifiableList()))
-                .build();
+                .build());
     }
 
-    private static class ApiFieldParser extends FieldVisitor {
+    private static class ApiFieldParser
+            extends FieldVisitor {
         private final ImmutableApiField.Builder builder;
 
         public ApiFieldParser(final int api, final FieldVisitor fieldVisitor, final ImmutableApiField.Builder builder) {
@@ -163,7 +172,8 @@ public final class ApiClassParser extends ClassVisitor {
         }
     }
 
-    private static class ApiMethodParser extends MethodVisitor {
+    private static class ApiMethodParser
+            extends MethodVisitor {
         private final ImmutableApiMethod.Builder builder;
 
         public ApiMethodParser(final int api, final MethodVisitor methodVisitor, final ImmutableApiMethod.Builder builder) {

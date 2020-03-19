@@ -8,7 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
-public class MethodAddedTest {
+public class MutilpleInheritedMethodTest {
     @Test
     public void shouldFindRemovedMethod() {
         final var older = ApiClassParser.ofPublic(Older.class.getName()).get();
@@ -27,15 +27,45 @@ public class MethodAddedTest {
         assertThat(diff.get(0).changedTo(), is("public int callMe(int)"));
     }
 
+    public static class Some {
+    }
 
-    public static class Older {
+    ;
+
+    public interface Parent {
+        Some callSome(int i);
+
+        double callSome(double i);
+    }
+
+    public static class Older implements Parent {
         public int callMe() {
+            return 0;
+        }
+
+        @Override
+        public Some callSome(final int i) {
+            return new Some();
+        }
+
+        @Override
+        public double callSome(final double i) {
             return 0;
         }
     }
 
-    public static class Newer {
+    public static class Newer implements Parent {
         public int callMe(int param) {
+            return 0;
+        }
+
+        @Override
+        public Some callSome(final int i) {
+            return new Some();
+        }
+
+        @Override
+        public double callSome(final double i) {
             return 0;
         }
     }

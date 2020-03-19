@@ -1,5 +1,7 @@
 package net.ninjacat.brking.api;
 
+import net.ninjacat.brking.api.internal.ApiClassParser;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -8,8 +10,6 @@ import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
-
-import net.ninjacat.brking.api.internal.ApiClassParser;
 
 public final class ClassPool extends ApiObjectPool<ApiClass> {
   private ClassPool(final List<ApiClass> classes) {
@@ -21,7 +21,7 @@ public final class ClassPool extends ApiObjectPool<ApiClass> {
   }
 
   public static ClassPool ofClass(final String className, final boolean publicOnly) {
-    return new ClassPool(List.of(ApiClassParser.of(className, publicOnly)), cls -> "name");
+      return new ClassPool(List.of(ApiClassParser.of(className, publicOnly).orElseThrow(() -> new IllegalArgumentException("Invalid class"))), cls -> "name");
   }
 
   public static ClassPool ofOlder(final JarFile file) {
@@ -34,11 +34,11 @@ public final class ClassPool extends ApiObjectPool<ApiClass> {
 
   public static ClassPool of(final JarFile file, final boolean publicOnly) {
     return new ClassPool(
-        file.stream()
-            .filter(entry -> !entry.isDirectory())
-            .filter(entry -> entry.getRealName().endsWith(".class"))
-            .map(entry -> entryToStream(file, entry))
-            .map(stream -> ApiClassParser.of(stream, publicOnly))
+            file.stream()
+                    .filter(entry -> !entry.isDirectory())
+                    .filter(entry -> entry.getRealName().endsWith(".class"))
+                    .map(entry -> entryToStream(file, entry))
+                    .flatMap(stream -> ApiClassParser.of(stream, publicOnly).stream())
             .filter(cls -> !publicOnly || cls.isPublic())
             .collect(Collectors.toList()));
     }

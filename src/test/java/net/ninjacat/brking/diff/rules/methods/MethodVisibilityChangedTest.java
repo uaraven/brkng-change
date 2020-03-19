@@ -11,8 +11,8 @@ import static org.hamcrest.Matchers.is;
 public class MethodVisibilityChangedTest {
     @Test
     public void shouldFindModifiersDifference() {
-        final var older = ApiClassParser.ofPublic(Older.class.getName());
-        final var newer = ApiClassParser.of(Newer.class.getName());
+        final var older = ApiClassParser.ofPublic(Older.class.getName()).get();
+        final var newer = ApiClassParser.of(Newer.class.getName()).get();
 
         final var olderFields = MethodPool.of(older);
         final var newerFields = MethodPool.of(newer);

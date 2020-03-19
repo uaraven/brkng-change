@@ -12,8 +12,8 @@ public class FieldVisibilityChangedTest {
 
     @Test
     public void shouldFindModifiersDifference() {
-        final var older = ApiClassParser.ofPublic(Older.class.getName());
-        final var newer = ApiClassParser.of(Newer.class.getName());
+        final var older = ApiClassParser.ofPublic(Older.class.getName()).get();
+        final var newer = ApiClassParser.of(Newer.class.getName()).get();
 
         final var olderFields = FieldPool.of(older);
         final var newerFields = FieldPool.of(newer);

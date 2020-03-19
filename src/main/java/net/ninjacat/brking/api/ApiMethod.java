@@ -18,10 +18,9 @@ public abstract class ApiMethod implements ApiClassElement {
                 .map(Type::getDescriptor)
                 .collect(Collectors.joining(""));
 
-        return String.format("%s.%s(%s)", ownerName(), name(), params);
+        //return String.format("%s.%s(%s)", ownerName(), name(), params);
+        return String.format("%s(%s)", name(), params);
     });
-
-    public abstract List<ApiMethodParameter> parameters();
 
     public abstract List<String> exceptions();
 

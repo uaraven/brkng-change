@@ -12,8 +12,8 @@ public class ClassModifiersChangedTest {
 
     @Test
     public void shouldFindDifferenceInFinal() {
-        final var older = ApiClassParser.of(Older.class.getName());
-        final var newer = ApiClassParser.of(Newer.class.getName());
+        final var older = ApiClassParser.of(Older.class.getName()).get();
+        final var newer = ApiClassParser.of(Newer.class.getName()).get();
 
         final var differ = new ClassModifiersChanged();
 
@@ -26,8 +26,8 @@ public class ClassModifiersChangedTest {
 
     @Test
     public void shouldFindDifferenceInAbstract() {
-        final var older = ApiClassParser.of(Older1.class.getName());
-        final var newer = ApiClassParser.of(net.ninjacat.brking.diff.rules.p2.Older1.class.getName());
+        final var older = ApiClassParser.of(Older1.class.getName()).get();
+        final var newer = ApiClassParser.of(net.ninjacat.brking.diff.rules.p2.Older1.class.getName()).get();
 
         final var differ = new ClassModifiersChanged();
 

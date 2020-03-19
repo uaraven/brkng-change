@@ -12,8 +12,8 @@ public class ClassInterfacesAddedTest {
 
     @Test
     public void shouldFindAddedInterface() {
-        final var older = ApiClassParser.of(Older.class.getName());
-        final var newer = ApiClassParser.of(Newer.class.getName());
+        final var older = ApiClassParser.of(Older.class.getName()).get();
+        final var newer = ApiClassParser.of(Newer.class.getName()).get();
 
         final var differ = new ClassInterfacesAdded();
 

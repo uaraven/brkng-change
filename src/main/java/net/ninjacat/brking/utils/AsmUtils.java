@@ -39,7 +39,7 @@ public final class AsmUtils {
     }
 
     public static String className(final String descriptor) {
-        return Type.getObjectType(descriptor).getClassName();
+        return descriptor == null ? "" : Type.getObjectType(descriptor).getClassName();
     }
 
     public static String modifiersToString(final int access) {
