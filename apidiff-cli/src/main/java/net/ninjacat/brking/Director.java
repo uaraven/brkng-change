@@ -52,6 +52,9 @@ public class Director {
   }
 
   private SourceType getSourceType(final String jarPointer) {
+    if (jarPointer == null) {
+      throw new IllegalArgumentException("Jar not provided");
+    }
     if (Files.exists(Paths.get(jarPointer))) {
       return SourceType.FILE;
     } else if (isMaven(jarPointer)) {
