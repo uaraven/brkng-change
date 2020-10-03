@@ -5,15 +5,15 @@ import net.ninjacat.brking.output.Printers;
 
 public class Args {
 
-  @Parameter(names = {"-r", "--repository-url"},
-          description = "Maven repository URL, default is Maven Central",
-          order = 1)
-  private String mavenRepo = "https://repo1.maven.org/maven2/";
+    @Parameter(names = {"-r", "--repository-url"},
+            description = "Maven repository URL, default is Maven Central",
+            order = 1)
+    private String mavenRepo = "https://repo1.maven.org/maven2/";
 
-    @Parameter(names = {"--older"}, description = "Older version of jar. Maven coordinates, file or URL", order = 2)
+    @Parameter(names = {"--older"}, description = "Older version of jar. Maven coordinates, file or URL", required = true, order = 2)
     private String previousJar;
 
-    @Parameter(names = {"--newer"}, description = "Older version of jar. Maven coordinates, file or URL", order = 3)
+    @Parameter(names = {"--newer"}, description = "Older version of jar. Maven coordinates, file or URL", required = true, order = 3)
     private String currentJar;
 
     @Parameter(names = {"--relaxed"}, description = "Relaxed diff rules for return type changes. If return type changed to subclass of older return type it will be treated as warning", order = 4)
@@ -30,16 +30,16 @@ public class Args {
     private boolean help;
 
     public String getMavenRepo() {
-    return mavenRepo;
-  }
+        return mavenRepo;
+    }
 
-  public String getPreviousJar() {
-    return previousJar;
-  }
+    public String getPreviousJar() {
+        return previousJar;
+    }
 
-  public String getCurrentJar() {
-    return currentJar;
-  }
+    public String getCurrentJar() {
+        return currentJar;
+    }
 
     public Printers getOutputFormat() {
         return outputFormat;
