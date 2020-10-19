@@ -12,9 +12,9 @@ import net.ninjacat.brking.diff.DiffElement;
 import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 
-import static net.ninjacat.brking.utils.AnnotationUtils.filterOutDeprecated;
+import static net.ninjacat.brking.utils.AnnotationUtils.hasDeprecated;
 
-public class FieldAnnotationsChanged
+public class FieldDeprecated
     implements FieldDiffRule
 {
   @Override
@@ -26,13 +26,12 @@ public class FieldAnnotationsChanged
     final var matching = matchingOnly(older, newer);
     return matching.stream()
         .map(field -> Tuple.of(older.get(field.name()), newer.get(field.name())))
-        .filter(pair -> !pair._1().annotations().equals(filterOutDeprecated(pair._2().annotations())))
+        .filter(pair -> !hasDeprecated(pair._1()) && hasDeprecated(pair._2()))
         .map(pair -> ImmutableDiffElement.builder()
             .ownerClass(reference)
-            .diffType(DiffType.FieldAnnotationsChanged)
+            .diffType(DiffType.FieldDeprecated)
             .changedObject(pair._1())
-            .changedFrom(pair._1().annotationNames())
-            .changedTo(pair._2().annotationNames())
+            .changedTo("Deprecated")
             .build())
         .collect(Collectors.toUnmodifiableList());
   }
