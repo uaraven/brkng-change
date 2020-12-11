@@ -26,7 +26,8 @@ import static io.vavr.API.Match;
 import static io.vavr.Predicates.is;
 import static org.fusesource.jansi.Ansi.ansi;
 
-public class Director {
+public class Director
+{
   private static final Logger LOGGER = ConsoleLogger.getLogger();
 
   public void execute(final Args params) {
@@ -39,17 +40,17 @@ public class Director {
     final CompletableFuture<File> previousFile = getJar(params, params.getPreviousJar());
 
     return CompletableFuture
-            .allOf(currentFile, previousFile)
-            .thenApply(ignored -> verifyDownloads(currentFile, previousFile))
-            .join();
+        .allOf(currentFile, previousFile)
+        .thenApply(ignored -> verifyDownloads(currentFile, previousFile))
+        .join();
   }
 
   private CompletableFuture<File> getJar(final Args args, final String jarPointer) {
     final var sourceType = getSourceType(jarPointer);
     return Match(sourceType).of(
-            Case($(is(SourceType.FILE)), f -> getFile(jarPointer)),
-            Case($(is(SourceType.MAVEN)), f -> getMavenArtifact(args, jarPointer)),
-            Case($(is(SourceType.URL)), f -> getFileFromUrl(jarPointer))
+        Case($(is(SourceType.FILE)), f -> getFile(jarPointer)),
+        Case($(is(SourceType.MAVEN)), f -> getMavenArtifact(args, jarPointer)),
+        Case($(is(SourceType.URL)), f -> getFileFromUrl(jarPointer))
     );
   }
 
@@ -59,28 +60,33 @@ public class Director {
     }
     if (Files.exists(Paths.get(jarPointer))) {
       return SourceType.FILE;
-    } else if (isMaven(jarPointer)) {
+    }
+    else if (isMaven(jarPointer)) {
       return SourceType.MAVEN;
-    } else if (Try.of(() -> URI.create(jarPointer)).isSuccess()) {
+    }
+    else if (Try.of(() -> URI.create(jarPointer)).isSuccess()) {
       return SourceType.URL;
-    } else {
+    }
+    else {
       throw new IllegalArgumentException("Invalid source: " + jarPointer);
     }
   }
 
   private CompletableFuture<File> getFileFromUrl(final String url) {
     final var jarName = Try.of(() -> Files.createTempFile("diff", ".jar"))
-            .getOrElseThrow((Function<Throwable, RuntimeException>) RuntimeException::new);
+        .getOrElseThrow((Function<Throwable, RuntimeException>) RuntimeException::new);
     jarName.toFile().deleteOnExit();
 
     LOGGER.print(ansi().a("Downloading from ").fgBrightBlue().a(url).reset().toString());
     final var downloader = new Downloader();
-    return downloader.download(URI.create(url), jarName.toString());
+    return downloader.download(URI.create(url),
+        null,
+        jarName.toString());
   }
 
   private CompletableFuture<File> getFile(final String path) {
     LOGGER.print(ansi().a("Using file ")
-            .fgBrightBlue().a(path).reset().toString());
+        .fgBrightBlue().a(path).reset().toString());
 
     return CompletableFuture.completedFuture(new File(path));
   }
@@ -88,10 +94,13 @@ public class Director {
   private CompletableFuture<File> getMavenArtifact(final Args args, final String coordinates) {
     final var coords = Coordinates.parse(coordinates);
     LOGGER.print(ansi().a("Retrieving ")
-            .fgBrightBlue().a(coords.getJarName())
-            .fgDefault().a(" from Maven").reset().toString());
+        .fgBrightBlue().a(coords.getJarName())
+        .fgDefault().a(" from Maven").reset().toString());
     final var downloader = new Downloader();
-    return downloader.download(URI.create(args.getMavenRepo()).resolve(coords.getFullPath()), coords.getJarName());
+    return downloader.download(
+        URI.create(args.getMavenRepo()).resolve(coords.getFullPath()),
+        args.getRepoAuth(),
+        coords.getJarName());
   }
 
   private boolean isMaven(final String coords) {
@@ -99,21 +108,22 @@ public class Director {
   }
 
   private ComparisonArtifacts verifyDownloads(
-          final CompletableFuture<File> currentFile,
-          final CompletableFuture<File> previousFile) {
+      final CompletableFuture<File> currentFile,
+      final CompletableFuture<File> previousFile)
+  {
     final var current = Try.of(currentFile::get);
     final var previous = Try.of(previousFile::get);
 
     return current.flatMap(cur -> previous.map(prev -> ImmutableComparisonArtifacts.of(cur, prev)))
-            .getOrElseThrow((Function<Throwable, RuntimeException>) RuntimeException::new);
+        .getOrElseThrow((Function<Throwable, RuntimeException>) RuntimeException::new);
   }
 
   private void compareApis(final Args params, final ComparisonArtifacts artifacts) {
     LOGGER.print(ansi().a("Comparing public APIs of ")
-            .fgBrightBlue().a(artifacts.previousJar().toPath().getFileName())
-            .fgDefault().a(" and ")
-            .fgBrightBlue().a(artifacts.currentJar().toPath().getFileName())
-            .reset().toString());
+        .fgBrightBlue().a(artifacts.previousJar().toPath().getFileName())
+        .fgDefault().a(" and ")
+        .fgBrightBlue().a(artifacts.currentJar().toPath().getFileName())
+        .reset().toString());
     try {
       final var options = ImmutableDiffOptions.builder()
           .relaxedInheritance(params.isRelaxed())
@@ -128,13 +138,15 @@ public class Director {
 
       final var printer = params.getOutputFormat().getPrinter(params);
       printer.print(diff);
-    } catch (final IOException ex) {
+    }
+    catch (final IOException ex) {
       throw new UncheckedIOException(ex);
     }
   }
 
   @Value.Immutable
-  interface ComparisonArtifacts {
+  interface ComparisonArtifacts
+  {
     @Value.Parameter(order = 0)
     File currentJar();
 
@@ -142,7 +154,8 @@ public class Director {
     File previousJar();
   }
 
-  private enum SourceType {
+  private enum SourceType
+  {
     MAVEN,
     FILE,
     URL

@@ -3,12 +3,17 @@ package net.ninjacat.brking;
 import com.beust.jcommander.Parameter;
 import net.ninjacat.brking.output.Printers;
 
-public class Args {
-
+public class Args
+{
     @Parameter(names = {"-r", "--repository-url"},
                description = "Maven repository URL, default is Maven Central",
                order = 10)
     private String mavenRepo = "https://repo1.maven.org/maven2/";
+
+    @Parameter(names = {"-a", "--repository-auth"},
+               description = "Maven repository user name and password for HTTP basic authentication in 'user:password' format",
+               order = 15)
+    private String repoAuth = "";
 
     @Parameter(names = {"--older"},
                description = "Older version of jar. Maven coordinates, file or URL",
@@ -41,6 +46,10 @@ public class Args {
 
     public String getMavenRepo() {
         return mavenRepo;
+    }
+
+    public String getRepoAuth() {
+        return repoAuth;
     }
 
     public String getPreviousJar() {

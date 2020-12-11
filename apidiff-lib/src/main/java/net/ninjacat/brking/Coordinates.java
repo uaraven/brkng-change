@@ -1,9 +1,9 @@
 package net.ninjacat.brking;
 
+import java.nio.file.Paths;
+
 import io.vavr.collection.List;
 import org.immutables.value.Value;
-
-import java.nio.file.Paths;
 
 @Value.Immutable
 public abstract class Coordinates {
@@ -21,8 +21,8 @@ public abstract class Coordinates {
   }
 
   public String getFullPath() {
-    return Paths.get("/" + groupId().replace(".", "/")).resolve(artifactId()).resolve(version()).resolve(getJarName())
-                .toString();
+    return Paths.get(groupId().replace(".", "/")).resolve(artifactId()).resolve(version()).resolve(getJarName())
+        .toString();
   }
 
   public static Coordinates parse(final String gradleCoords) {

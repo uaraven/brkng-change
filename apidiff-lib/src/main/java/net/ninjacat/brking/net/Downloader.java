@@ -1,9 +1,5 @@
 package net.ninjacat.brking.net;
 
-import io.vavr.control.Try;
-import net.ninjacat.brking.logging.ConsoleLogger;
-import net.ninjacat.brking.logging.Logger;
-
 import java.io.File;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -13,7 +9,15 @@ import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
+
+import javax.annotation.Nullable;
+
+import io.vavr.control.Try;
+import net.ninjacat.brking.logging.ConsoleLogger;
+import net.ninjacat.brking.logging.Logger;
+import net.ninjacat.brking.utils.StringUtils;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -24,25 +28,35 @@ public class Downloader {
 
   public Downloader() {
     this.client = HttpClient.newBuilder()
-                            .followRedirects(Redirect.NORMAL)
-                            .connectTimeout(Duration.ofSeconds(20))
-                            .build();
+        .followRedirects(Redirect.NORMAL)
+        .connectTimeout(Duration.ofSeconds(20))
+        .build();
   }
 
-  public CompletableFuture<File> download(final URI uri, final String fileName) {
-    final var req = HttpRequest.newBuilder()
-                               .uri(uri)
-                               .timeout(Duration.ofMinutes(2))
-                               .GET()
-                               .build();
+  public CompletableFuture<File> download(
+      final URI uri,
+      @Nullable final String authentication,
+      final String fileName)
+  {
+    final var reqBuilder = HttpRequest.newBuilder()
+        .uri(uri)
+        .timeout(Duration.ofMinutes(2));
+
+    if (StringUtils.isNotBlank(authentication)) {
+      reqBuilder.header("Authorization", "Basic " + Base64.getEncoder().encodeToString(authentication.getBytes()));
+    }
+
+    final var req = reqBuilder
+        .GET()
+        .build();
 
     LOGGER.print("Downloading %s from %s", fileName, uri);
     return Try.of(() -> File.createTempFile("tmp", fileName).getAbsoluteFile().toPath())
-              .fold(CompletableFuture::failedFuture,
-                    path -> client.sendAsync(req, HttpResponse.BodyHandlers.ofFile(path))
-                            .thenAccept(this::handleResponse)
-                                  .thenApply(v -> path.toFile())
-              );
+        .fold(CompletableFuture::failedFuture,
+            path -> client.sendAsync(req, HttpResponse.BodyHandlers.ofFile(path))
+                .thenAccept(this::handleResponse)
+                .thenApply(v -> path.toFile())
+        );
   }
 
   private void handleResponse(final HttpResponse<Path> resp) {

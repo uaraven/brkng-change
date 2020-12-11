@@ -30,6 +30,6 @@ public class CoordinatesTest {
   public void shouldCreateFullName() {
     final var coordinates = ImmutableCoordinates.parse("org.example:example:1.0");
 
-    assertThat(coordinates.getFullPath().toString(), is("/org/example/example/1.0/example-1.0.jar"));
+    assertThat(coordinates.getFullPath().toString(), is("org/example/example/1.0/example-1.0.jar"));
   }
 }
