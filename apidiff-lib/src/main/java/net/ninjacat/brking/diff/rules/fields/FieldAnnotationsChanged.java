@@ -12,7 +12,7 @@ import net.ninjacat.brking.diff.DiffElement;
 import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 
-import static net.ninjacat.brking.utils.AnnotationUtils.filterOutDeprecated;
+import static net.ninjacat.brking.utils.AnnotationUtils.sameAnnotations;
 
 public class FieldAnnotationsChanged
     implements FieldDiffRule
@@ -26,7 +26,7 @@ public class FieldAnnotationsChanged
     final var matching = matchingOnly(older, newer);
     return matching.stream()
         .map(field -> Tuple.of(older.get(field.name()), newer.get(field.name())))
-        .filter(pair -> !pair._1().annotations().equals(filterOutDeprecated(pair._2().annotations())))
+        .filter(pair -> !sameAnnotations(pair._1().annotations(), pair._2().annotations()))
         .map(pair -> ImmutableDiffElement.builder()
             .ownerClass(reference)
             .diffType(DiffType.FieldAnnotationsChanged)

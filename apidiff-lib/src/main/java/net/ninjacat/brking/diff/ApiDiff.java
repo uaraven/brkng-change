@@ -1,14 +1,14 @@
 package net.ninjacat.brking.diff;
 
-import com.google.common.collect.Streams;
-import net.ninjacat.brking.api.ClassPool;
-import net.ninjacat.brking.diff.rules.ClassComparator;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.google.common.collect.Streams;
+import net.ninjacat.brking.api.ClassPool;
+import net.ninjacat.brking.diff.rules.ClassComparator;
 
 import static java.util.Comparator.reverseOrder;
 
@@ -26,13 +26,18 @@ public class ApiDiff {
     }
 
     public static List<DiffElement> ofJars(final JarFile older, final JarFile newer,
-                                           final SortType sortType, final DiffOptions options) {
-        return new ApiDiff(ClassPool.ofOlder(older), ClassPool.ofNewer(newer), false)
-                .diff(sortType, options);
+                                           final SortType sortType, final DiffOptions options)
+    {
+        return new ApiDiff(
+            ClassPool.ofOlder(older, options.isPublicOnly()),
+            ClassPool.ofNewer(newer, options.isPublicOnly()), false)
+            .diff(sortType, options);
     }
 
     public static List<DiffElement> ofJars(final JarFile older, final JarFile newer, final SortType sortType) {
-        return new ApiDiff(ClassPool.ofOlder(older), ClassPool.ofNewer(newer), false).diff(sortType);
+        return new ApiDiff(
+            ClassPool.ofOlder(older, true),
+            ClassPool.ofNewer(newer, true), false).diff(sortType);
     }
 
     public static List<DiffElement> ofClasses(final String olderClassName,

@@ -12,7 +12,7 @@ import net.ninjacat.brking.diff.DiffElement;
 import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 
-import static net.ninjacat.brking.utils.AnnotationUtils.filterOutDeprecated;
+import static net.ninjacat.brking.utils.AnnotationUtils.sameAnnotations;
 
 public class MethodAnnotationsChanged implements MethodDiffRule {
   @Override
@@ -25,7 +25,7 @@ public class MethodAnnotationsChanged implements MethodDiffRule {
     final var matching = matchingOnly(older, newer);
     return matching.stream()
         .map(method -> Tuple.of(older.get(method.identifier()), newer.get(method.identifier())))
-        .filter(pair -> !pair._1().annotations().equals(filterOutDeprecated(pair._2().annotations())))
+        .filter(pair -> !sameAnnotations(pair._1().annotations(), pair._2().annotations()))
             .map(pair -> ImmutableDiffElement.builder()
                     .ownerClass(reference)
                     .changedObject(pair._1())

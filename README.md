@@ -48,7 +48,7 @@ Detected changes
 Notes:
  - *Fields are identified by names only. `int field` and `float field` are treated as the same field.
  - **Methods are identified by a signature
- - Only public APIs are inspected 
+ - Only public APIs are inspected (or all of them - it's configurable) 
  
  
 ## Usage

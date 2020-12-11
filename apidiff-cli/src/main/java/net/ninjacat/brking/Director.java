@@ -1,15 +1,5 @@
 package net.ninjacat.brking;
 
-import io.vavr.control.Try;
-import net.ninjacat.brking.diff.ApiDiff;
-import net.ninjacat.brking.diff.ApiDiff.SortType;
-import net.ninjacat.brking.diff.ImmutableDiffOptions;
-import net.ninjacat.brking.logging.ConsoleLogger;
-import net.ninjacat.brking.logging.Logger;
-import net.ninjacat.brking.net.Downloader;
-import org.eclipse.aether.artifact.DefaultArtifact;
-import org.immutables.value.Value;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -20,7 +10,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.jar.JarFile;
 
-import static io.vavr.API.*;
+import io.vavr.control.Try;
+import net.ninjacat.brking.diff.ApiDiff;
+import net.ninjacat.brking.diff.ApiDiff.SortType;
+import net.ninjacat.brking.diff.ImmutableDiffOptions;
+import net.ninjacat.brking.logging.ConsoleLogger;
+import net.ninjacat.brking.logging.Logger;
+import net.ninjacat.brking.net.Downloader;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.immutables.value.Value;
+
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
 import static io.vavr.Predicates.is;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -113,13 +115,16 @@ public class Director {
             .fgBrightBlue().a(artifacts.currentJar().toPath().getFileName())
             .reset().toString());
     try {
-      final var options = ImmutableDiffOptions.builder().relaxedInheritance(params.isRelaxed()).build();
+      final var options = ImmutableDiffOptions.builder()
+          .relaxedInheritance(params.isRelaxed())
+          .isPublicOnly(params.isPublicOnly())
+          .build();
 
       final var diff = ApiDiff.ofJars(
-              new JarFile(artifacts.previousJar()),
-              new JarFile(artifacts.currentJar()),
-              SortType.BY_SEVERITY,
-              options);
+          new JarFile(artifacts.previousJar()),
+          new JarFile(artifacts.currentJar()),
+          SortType.BY_SEVERITY,
+          options);
 
       final var printer = params.getOutputFormat().getPrinter(params);
       printer.print(diff);
