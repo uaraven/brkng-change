@@ -8,23 +8,24 @@ import net.ninjacat.brking.diff.DiffElement;
 import net.ninjacat.brking.diff.DiffType;
 import net.ninjacat.brking.diff.ImmutableDiffElement;
 
-import static net.ninjacat.brking.utils.AnnotationUtils.filterOutDeprecated;
+import static net.ninjacat.brking.utils.AnnotationUtils.hasDeprecated;
 
-public class ClassAnnotationsChanged implements ClassDiffRule {
+public class ClassDeprecated
+    implements ClassDiffRule
+{
     @Override
     public List<DiffElement> process(final ApiClass older, final ApiClass newer, final DiffContext context) {
-        if (!older.annotations().equals(filterOutDeprecated(newer.annotations()))) {
+        if (!hasDeprecated(older) && hasDeprecated(newer)) {
             return List.of(ImmutableDiffElement.builder()
                 .ownerClass(older)
                 .changedObject(older)
-                .diffType(DiffType.ClassAnnotationsChanged)
-                .changedFrom(older.annotationNames())
-                .changedTo(newer.annotationNames())
+                .diffType(DiffType.ClassDeprecated)
+                .changedTo("Deprecated")
                 .build());
         }
         else {
             return List.of();
         }
-  }
+    }
 }
 

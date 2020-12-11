@@ -12,6 +12,7 @@ public enum DiffType {
   ClassSuperClassChanged(ChangeSeverity.BREAKING),
   ClassSuperClassChangedToSubclass(ChangeSeverity.WARNING),
   ClassAnnotationsChanged(ChangeSeverity.WARNING),
+  ClassDeprecated(ChangeSeverity.WARNING),
   FieldModifiersChanged(ChangeSeverity.BREAKING),
   FieldRemoved(ChangeSeverity.BREAKING),
   FieldAdded(ChangeSeverity.SAFE),
@@ -19,6 +20,7 @@ public enum DiffType {
   FieldTypeChangedToSubclass(ChangeSeverity.WARNING),
   FieldVisibilityChanged(ChangeSeverity.BREAKING),
   FieldAnnotationsChanged(ChangeSeverity.WARNING),
+  FieldDeprecated(ChangeSeverity.WARNING),
   MethodModifiersChanged(ChangeSeverity.BREAKING),
   MethodRemoved(ChangeSeverity.BREAKING),
   MethodAdded(ChangeSeverity.SAFE),
@@ -26,7 +28,8 @@ public enum DiffType {
   MethodReturnTypeChangedToSubclass(ChangeSeverity.WARNING),
   MethodVisibilityChanged(ChangeSeverity.BREAKING),
   MethodExceptionsChanged(ChangeSeverity.BREAKING),
-  MethodAnnotationsChanged(ChangeSeverity.WARNING);
+  MethodAnnotationsChanged(ChangeSeverity.WARNING),
+  MethodDeprecated(ChangeSeverity.WARNING);
 
   private final ChangeSeverity severity;
 
