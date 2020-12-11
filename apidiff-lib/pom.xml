@@ -7,11 +7,11 @@
     <parent>
         <groupId>net.ninjacat</groupId>
         <artifactId>apidiff</artifactId>
-        <version>0.0.1</version>
+        <version>1</version>
     </parent>
 
     <artifactId>apidiff-lib</artifactId>
-    <version>${parent.version}</version>
+    <version>${release.version</version>
 
 
     <properties>

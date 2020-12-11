@@ -7,11 +7,11 @@
     <parent>
         <groupId>net.ninjacat</groupId>
         <artifactId>apidiff</artifactId>
-        <version>0.0.1</version>
+        <version>1</version>
     </parent>
 
     <artifactId>apidiff-cli</artifactId>
-    <version>${parent.version}</version>
+    <version>${release.version}</version>
 
     <properties>
         <jcommander.version>1.78</jcommander.version>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>net.ninjacat</groupId>
             <artifactId>apidiff-lib</artifactId>
-            <version>${project.version}</version>
+            <version>${release.version}</version>
         </dependency>
         <dependency>
             <groupId>com.beust</groupId>
