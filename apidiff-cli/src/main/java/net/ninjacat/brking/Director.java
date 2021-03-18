@@ -1,7 +1,9 @@
 package net.ninjacat.brking;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -137,7 +139,15 @@ public class Director
           options);
 
       final var printer = params.getOutputFormat().getPrinter(params);
-      printer.print(diff);
+      final PrintStream output;
+      if (params.getOutputPath() != null) {
+        output = new PrintStream(new FileOutputStream(params.getOutputPath()));
+      }
+      else {
+        output = System.out;
+      }
+      printer.print(output, diff);
+      output.flush();
     }
     catch (final IOException ex) {
       throw new UncheckedIOException(ex);

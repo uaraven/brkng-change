@@ -36,10 +36,10 @@ public class Args
     private boolean nonPublic = false;
 
     @Parameter(names = {"-f", "--format"}, description = "Output format. One of CONSOLE, JSON or HTML", order = 50)
-    private Printers outputFormat = Printers.CONSOLE;
+    private Printers outputFormat = Printers.TEXT;
 
     @Parameter(names = {"-o", "--output"}, description = "Output file name", order = 60)
-    private String outputPath = "./";
+    private String outputPath = null;
 
     @Parameter(names = "--help", help = true, order = 200)
     private boolean help;

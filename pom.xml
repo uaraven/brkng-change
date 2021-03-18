@@ -10,9 +10,9 @@
   <packaging>pom</packaging>
 
   <properties>
-    <release.version>0.1.0</release.version>
+    <release.version>0.2.0</release.version>
     <immutables.version>2.8.2</immutables.version>
-    <vavr.version>1.0.0-alpha-3</vavr.version>
+    <vavr.version>0.10.3</vavr.version>
     <hamcrest.version>2.2</hamcrest.version>
     <junit.version>4.13.1</junit.version>
     <guava.version>28.2-jre</guava.version>

@@ -1,5 +1,6 @@
 package net.ninjacat.brking.output;
 
+import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -76,7 +77,7 @@ public class ConsolePrinter
           .toString())
       .put(DiffType.FieldDeprecated, ansi().a("Field [").fg(MBR).a("${object.apiName}").fgDefault().a("]")
           .fgBright(HL).a(" became deprecated").fgDefault().toString())
-      .put(DiffType.FieldAnnotationsChanged, ansi().a("Field ]").fg(MBR).a("${object.apiName}").fgDefault().a(
+      .put(DiffType.FieldAnnotationsChanged, ansi().a("Field [").fg(MBR).a("${object.apiName}").fgDefault().a(
           "] annotations changed from [")
           .fgBright(HL).a("${changed.from}").fgDefault().a("] to [").fgBright(HL).a("${changed.to}").a("]").fgDefault()
           .toString())
@@ -118,13 +119,13 @@ public class ConsolePrinter
   }
 
   @Override
-  public void print(final List<DiffElement> diff) {
+  public void print(final PrintStream writer, final List<DiffElement> diff) {
     final AtomicReference<String> currentClass = new AtomicReference<>("");
     diff.forEach(e -> {
       if (!e.ownerClass().apiName().equals(currentClass.get())) {
-        System.out.println();
-        System.out.println(ansi().fgDefault().a("Class ").fgBrightDefault().a(e.ownerClass().apiName()));
-        System.out.println(ansi().a(StringUtils.leftPad("", 6 + e.ownerClass().apiName().length(), '-')).reset());
+        writer.println();
+        writer.println(ansi().fgDefault().a("Class ").fgBrightDefault().a(e.ownerClass().apiName()));
+        writer.println(ansi().a(StringUtils.leftPad("", 6 + e.ownerClass().apiName().length(), '-')).reset());
         currentClass.set(e.ownerClass().apiName());
       }
       final var template = new StrSubstitutor(e.asTemplateContext());
@@ -132,7 +133,7 @@ public class ConsolePrinter
           .fgDefault().a("] ").toString();
       final var message = template.replace(MESSAGES.get(e.diffType()));
 
-      System.out.println(prefix + message);
+      writer.println(prefix + message);
     });
   }
 }

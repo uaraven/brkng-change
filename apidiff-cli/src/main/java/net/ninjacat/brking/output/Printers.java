@@ -1,13 +1,14 @@
 package net.ninjacat.brking.output;
 
-import net.ninjacat.brking.Args;
-
 import java.util.function.Function;
 
-public enum Printers {
-    CONSOLE(args -> new ConsolePrinter()),
+import net.ninjacat.brking.Args;
+
+public enum Printers
+{
+    TEXT(args -> new ConsolePrinter()),
     JSON(args -> new ConsolePrinter()),
-    HTML(args -> new ConsolePrinter());
+    HTML(args -> new HtmlPrinter());
 
     private final Function<Args, DiffPrinter> printerProvider;
 
