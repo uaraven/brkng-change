@@ -15,7 +15,7 @@
     <vavr.version>0.10.3</vavr.version>
     <hamcrest.version>2.2</hamcrest.version>
     <junit.version>4.13.1</junit.version>
-    <guava.version>30.0-jre</guava.version>
+    <guava.version>32.0.0-jre</guava.version>
     <jansi.version>1.18</jansi.version>
   </properties>
 
